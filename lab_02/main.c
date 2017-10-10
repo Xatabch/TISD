@@ -8,6 +8,7 @@
 #define TYPE_LEN 15
 #define KIND 15
 
+
 struct technical_t {
   char author[NAME_LEN + 1];
   char title [TITLE_LEN + 1];
