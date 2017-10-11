@@ -1,3 +1,6 @@
+Tolstoi|Voina i mir|Astrel|10000|2|roman|
+Douson|Coding on Python|Piter|416|1|coding|translate|2014|
+Tolstoi|Voina i mir|Astrel|10000|2|roman|
 Толстой|Война и мир|Астрель|10000|2|роман|
 Каверин|Два капитана|АСТ|619|2|роман|
 Корбалан|Золотое сечение|Деагостини|160|1|математика|перводная|2014|
