@@ -173,6 +173,7 @@ int get_records(FILE *f,struct literature_list *data)
   if(fgets(str,sizeof(str),f))
   {
   	kind = kind_book(str);
+    data[i].type1 = kind;
     get_first_params(kind,i,str,data);
   	i++;
   	while(fgets(str,sizeof(str),f))
@@ -250,11 +251,6 @@ void puzir_not_table(struct literature_list *data,int size)
     dop[i].pages_number = data[i].pages_number;
   }
 
-  //for (int i = 0; i < size; i++)
-  //{
-  //  printf("%d %d\n", dop[i].n,dop[i].pages_number);
-  //}
-
   while (size > 0)
   {
     for (int i = 0; i < size; i++)
@@ -306,6 +302,33 @@ void rascheska_not_table(struct literature_list *data,int size)
   }
 }
 
+void write_file(void)
+{
+  FILE *f_in;
+  FILE *f_out;
+  char str[200];
+  int i;
+
+  f_in = fopen("in2.txt","w");
+  f_out = fopen("out.txt","r");
+
+  i = 0;
+  //считал строку
+  if(fgets(str,sizeof(str),f_out))
+  {
+    fprintf(f_in, "%s\r", str);
+    i++;
+    while(fgets(str,sizeof(str),f_out))
+    {
+      fprintf(f_in, "%s\r", str);
+      i++;
+    }
+  }
+  fclose(f_in);
+  fclose(f_out);
+
+}
+
 
 int main(void)
 {
@@ -316,20 +339,30 @@ int main(void)
   struct literature_list sort3[100];
   struct literature_list sort4[100];
   int size = 0;
-  int ask = 100;;
+  int ask = -1;
+  int ask_type = -1;
   int ask_year = 0;
   char ask_industry[INDUSTRY_LEN+1];
   int find_count = 0;
   char type[TYPE_LEN+1] = "переводная";
   unsigned long long tb, te;
+  char author[NAME_LEN + 1];
+  char title [TITLE_LEN + 1];
+  char publisher[PUBLISHER_LEN + 1];
+  char pages_number[5];
+  char industry[INDUSTRY_LEN + 1];
+  char type_l[TYPE_LEN + 1];
+  char year[5];
+  char kostil[1];
+  char kind[KIND + 1];
 
   printf("Здравствуйте!В этой программе вам предоставлен список литературы");
   printf(",содержащий фамилию автора, название книги,издательство, количество"); 
-  printf("страниц, вид литературы(1:техническая отрасль, отечественная/"); 
+  printf("страниц, вид литературы(1:техническая-отрасль, отечественная/"); 
   printf("переводная, год издания;2:художественная-роман, пьеса, стихи).\n");
 
-  printf("Меню:\n0-выход\n1-вывести таблицу\n2-добавить запись в"); 
-  printf("таблицу\n3-удалить запись из таблицы\n4-отсортировать и вывести"); 
+  printf("Меню:\n1-вывести таблицу\n2-добавить запись в"); 
+  printf(" таблицу\n3-удалить запись из таблицы\n4-отсортировать и вывести"); 
   printf("результаты времени сортировки различными методами\n");
 
   f = fopen("in2.txt","r");
@@ -338,79 +371,141 @@ int main(void)
   else
   {
     size = get_records(f,data);
-    f = fopen("out.txt","w");
-    for(int i = 0; i < size; i++)
-    {
-      if(data[i].type1 == 1)
-        fprintf(f, "%s|%s|%s|%d|%d|%s|%s|%d|\r\n",data[i].author,data[i].title,data[i].publisher,data[i].pages_number,data[i].type1,data[i].item.technical.industry,data[i].item.technical.type,data[i].item.technical.year);
-      if(data[i].type1 == 2)
-        fprintf(f, "%s|%s|%s|%d|%d|%s|\r\n",data[i].author,data[i].title,data[i].publisher,data[i].pages_number,data[i].type1,data[i].item.artistic.kind);
-    }
+    fclose(f);
   }
 
-  while(ask != 0)
+  printf("Введите пункт меню: ");
+  scanf("%d",&ask);
+  if(ask > 0 && ask < 5)
   {
-    printf("Введите пункт меню: ");
-    scanf("%d",&ask);
-    if(ask >= 0 && ask < 5)
+    if(ask == 1)
     {
-      if(ask == 1)
+      if(size != 0)
       {
-        if(size != 0)
+        printf("Введите отрасль литературу по которой вы хотите получить: ");
+        scanf("%s",ask_industry);
+        printf("Введите год литературу до которого вы хотите получить: ");
+        scanf("%d",&ask_year);
+        if(strlen(ask_industry) > 0 && ask_year)
         {
-          printf("Введите отрасль литературу по которой вы хотите получить: ");
-          scanf("%s",ask_industry);
-          printf("Введите год литературу до которого вы хотите получить: ");
-          scanf("%d",&ask_year);
-          if(strlen(ask_industry) > 0 && ask_year)
+          for(int i = 0; i < size; i++)
           {
-            for(int i = 0; i < size; i++)
+            if(data[i].type1 == 1 && data[i].type1 == 1 && data[i].item.technical.year < ask_year && !strcmp(ask_industry,data[i].item.technical.industry) && !strcmp(type,data[i].item.technical.type))
             {
-              if(data[i].type1 == 1 && data[i].type1 == 1 && data[i].item.technical.year < ask_year && !strcmp(ask_industry,data[i].item.technical.industry) && !strcmp(type,data[i].item.technical.type))
-              {
-                printf("%d %s %s %s %d %d %s %s %d\n", data[i].number,data[i].author,data[i].title,data[i].publisher,data[i].pages_number,data[i].type1,data[i].item.technical.industry,data[i].item.technical.type,data[i].item.technical.year);
-                find_count++;
-              }
+              printf("%d %s %s %s %d %d %s %s %d\n", data[i].number,data[i].author,data[i].title,data[i].publisher,data[i].pages_number,data[i].type1,data[i].item.technical.industry,data[i].item.technical.type,data[i].item.technical.year);
+              find_count++;
             }
-            if(find_count == 0)
-              printf("По вашему запросу ничего не найдено\n");
           }
-          else
-            printf("Вы некорректно ввели год или отрасль\n");
+          if(find_count == 0)
+            printf("По вашему запросу ничего не найдено\n");
         }
         else
-          printf("Файл пуст\n");
+          printf("Вы некорректно ввели год или отрасль\n");
       }
-      if(ask ==  4)
+      else
+        printf("Файл пуст\n");
+    }
+
+    if(ask == 2)
+    {
+      f = fopen("out.txt","w");
+      for(int i = 0; i < size; i++)
       {
-        for (int i = 0; i < size; i++)
+        if(data[i].type1 == 1)
+          fprintf(f, "%s|%s|%s|%d|%d|%s|%s|%d|\r\n",data[i].author,data[i].title,data[i].publisher,data[i].pages_number,data[i].type1,data[i].item.technical.industry,data[i].item.technical.type,data[i].item.technical.year);
+        if(data[i].type1 == 2)
+          fprintf(f, "%s|%s|%s|%d|%d|%s|\r\n",data[i].author,data[i].title,data[i].publisher,data[i].pages_number,data[i].type1,data[i].item.artistic.kind);
+      }
+      data[size].number = size + 1;
+      gets(kostil);
+      printf("Введите фамилию автора: ");
+      gets(author);
+      decide_pole(0,0,size,strlen(author),data,author);
+      printf("Введите название произведения: ");
+      gets(title);
+      decide_pole(0,1,size,strlen(title),data,title);
+      printf("Введите издательство: ");
+      gets(publisher);
+      decide_pole(0,2,size,strlen(publisher),data,publisher);
+      printf("Введите количество страниц: ");
+      gets(pages_number);
+      decide_pole(0,3,size,strlen(pages_number),data,pages_number);
+      printf("Введите тип записи(1-технологическая,2-художественная): ");
+      scanf("%d",&ask_type);
+      if(ask_type != -1)
+      {
+        data[size].type1 = ask_type;
+        if(ask_type == 1)
         {
-          sort1[i] = data[i];
-          sort2[i] = data[i];
-          sort3[i] = data[i];
-          sort4[i] = data[i];
+          gets(kostil);
+          printf("Введите отрасль: ");
+          gets(industry);
+          decide_pole(ask_type,5,size,strlen(industry),data,industry);
+          printf("Введите тип(отечественная/переводая): ");
+          gets(type_l);
+          decide_pole(ask_type,6,size,strlen(type_l),data,type_l);
+          printf("Введите год издания: ");
+          gets(year);
+          decide_pole(ask_type,7,size,strlen(year),data,year);
+          fprintf(f, "%s|%s|%s|%d|%d|%s|%s|%d|\r\n",data[size].author,data[size].title,data[size].publisher,data[size].pages_number,data[size].type1,data[size].item.technical.industry,data[size].item.technical.type,data[size].item.technical.year);
+          printf("%d %s %s %s %d %d %s %s %d\n", data[size].number,data[size].author,data[size].title,data[size].publisher,data[size].pages_number,data[size].type1,data[size].item.technical.industry,data[size].item.technical.type,data[size].item.technical.year);
         }
+        if(ask_type == 2)
+        {
+          gets(kostil);
+          printf("Введите тип художественной лиетратуры: ");
+          gets(kind);
+          decide_pole(ask_type,5,size,strlen(kind),data,kind);
+          fprintf(f, "%s|%s|%s|%d|%d|%s|\r\n",data[size].author,data[size].title,data[size].publisher,data[size].pages_number,data[size].type1,data[size].item.artistic.kind);
+          printf("%s|%s|%s|%d|%d|%s|\r\n",data[size].author,data[size].title,data[size].publisher,data[size].pages_number,data[size].type1,data[size].item.artistic.kind);
+        }
+      }
+      fclose(f);
+      write_file();
+    }
 
-        tb = tick(); 
-        puzir_table(sort1,size);
-        te = tick();
-        printf("Пузырек таблицей: %llu\n", te - tb);
-
-        tb = tick();
-        rascheska_table(sort2,size);
-        te = tick();
-        printf("Расческа таблицей: %llu\n", te - tb);
-
-        tb = tick();
-        puzir_not_table(sort3,size);
-        te = tick();
-        printf("Пузырек без таблицы: %llu\n", te - tb);
-
-        tb = tick();
-        rascheska_not_table(sort4,size);
-        te = tick();
-        printf("Расческа без таблицы: %llu\n", te - tb);
+    if(ask == 3)
+    {
+     for(int i = 0; i < size; i++)
+      {
+        if(data[i].type1 == 1)
+          printf("%d %s %s %s %d %d %s %s %d \n",(i+1),data[i].author,data[i].title,data[i].publisher,data[i].pages_number,data[i].type1,data[i].item.technical.industry,data[i].item.technical.type,data[i].item.technical.year);
+        if(data[i].type1 == 2)
+          printf("%d %s %s %s %d %d %s \n",(i+1),data[i].author,data[i].title,data[i].publisher,data[i].pages_number,data[i].type1,data[i].item.artistic.kind);
       }
     }
+    if(ask ==  4)
+    {
+      for (int i = 0; i < size; i++)
+      {
+        sort1[i] = data[i];
+        sort2[i] = data[i];
+        sort3[i] = data[i];
+        sort4[i] = data[i];
+      }
+
+      tb = tick(); 
+      puzir_table(sort1,size);
+      te = tick();
+      printf("Пузырек таблицей: %llu\n", te - tb);
+
+      tb = tick();
+      rascheska_table(sort2,size);
+      te = tick();
+      printf("Расческа таблицей: %llu\n", te - tb);
+
+      tb = tick();
+      puzir_not_table(sort3,size);
+      te = tick();
+      printf("Пузырек без таблицы: %llu\n", te - tb);
+
+      tb = tick();
+      rascheska_not_table(sort4,size);
+      te = tick();
+      printf("Расческа без таблицы: %llu\n", te - tb);
+    }
+    //write_file();
   }
+  else
+    printf("Такого пункта меню нет\n");
 }
