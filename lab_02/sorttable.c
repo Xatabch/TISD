@@ -1,55 +1,59 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "main.h"
 
 void puzir_table(struct literature_list *data,int size)
 {
   struct literature_list middle;
-  size = size - 1;
 
   if(size != 0 && size >= 39)
   {
-    while (size > 0)
-    {
-      for (int i = 0; i < size; i++)
+    for(int i = 0 ; i < size; i++) 
+    { 
+      for(int j = 0 ; j < size - i - 1 ; j++) 
       {
-        if(data[i].pages_number > data[i+1].pages_number)
+        if(strcmp(data[j].author,data[j+1].author) > 0)
         {
-          middle = data[i+1];
-          data[i+1] = data[i];
-          data[i] = middle;
+          middle = data[j];
+          data[j] = data[j+1];
+          data[j+1] = middle;
         }
       }
-      size--;
     }
   }
 }
 
 void rascheska_table(struct literature_list *data,int size)
 {
-  int k;
   struct literature_list middle;
-  int s = size;
-  long long cnt = 0;
+  int left = 0, right = size - 1;
+  int flag = 1;
 
-  while(size > 1)
+  while ((left < right) && flag > 0)
   {
-    s/=1.247f;
-    if(s<1)
-      s=1;
-    k=0;
-    for (int i = 0; (i+s) < size; ++i)
+    flag = 0;
+    for (int i = left; i<right; i++)
     {
-      if(data[i].pages_number/10 > data[i+s].pages_number/10)
+      if (strcmp(data[i].author,data[i+1].author) > 0)
+      {             // меняем их местами
+        middle = data[i];
+        data[i] = data[i+1];
+        data[i+1] = middle;
+        flag = 1;
+      }
+    }
+    right--;
+    for (int i = right; i>left; i--)
+    {
+      if (strcmp(data[i-1].author,data[i].author) > 0)
       {
         middle = data[i];
-        data[i] = data[i+s];
-        data[i+1] = middle;
-        k=i;
+        data[i] = data[i-1];
+        data[i-1] = middle;
+        flag = 1;
       }
-      ++cnt;
     }
-    if(s == 1)
-      size = k + 1;
+    left++;
   }
 }

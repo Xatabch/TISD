@@ -1,0 +1,124 @@
+Tolstoi|Boina i mir|Astrel|10000|2|roman|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|perevodnaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|1|programmirovanie|perevodnaya|2014|
+Tolstoi|Boina i mir|Astrel|10000|2|roman|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|otechestvennaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|2|programmirovanie|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|otechestvennaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|2|programmirovanie|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|otechestvennaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|1|programmirovanie|perevodnaya|2014|
+Tolstoi|Boina i mir|Astrel|10000|2|roman|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|otechestvennaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|1|programmirovanie|perevodnaya|2014|Tolstoi|Boina i mir|Astrel|10000|2|roman|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|perevodnaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|1|programmirovanie|perevodnaya|2014|
+Tolstoi|Boina i mir|Astrel|10000|2|roman|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|otechestvennaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|2|programmirovanie|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|otechestvennaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|2|programmirovanie|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|otechestvennaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|1|programmirovanie|perevodnaya|2014|
+Tolstoi|Boina i mir|Astrel|10000|2|roman|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|otechestvennaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|1|programmirovanie|perevodnaya|2014|Tolstoi|Boina i mir|Astrel|10000|2|roman|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|perevodnaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|1|programmirovanie|perevodnaya|2014|
+Tolstoi|Boina i mir|Astrel|10000|2|roman|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|otechestvennaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|2|programmirovanie|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|otechestvennaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|2|programmirovanie|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|otechestvennaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|1|programmirovanie|perevodnaya|2014|
+Tolstoi|Boina i mir|Astrel|10000|2|roman|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|otechestvennaya|2006|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Draizer|Finansist|ACT|587|2|roman|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|1|programmirovanie|perevodnaya|2014|
