@@ -7,7 +7,7 @@ void write_file(int delete)
   char str[200];
   int i;
 
-  f_in = fopen("in2.txt","w");
+  f_in = fopen("in.txt","w");
   f_out = fopen("out.txt","r");
 
   i = 0;

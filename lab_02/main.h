@@ -11,7 +11,7 @@
 
 struct dop_array {
   int n;
-  int pages_number;
+  char author[NAME_LEN+1];
 };
 
 struct technical_t {
