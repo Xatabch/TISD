@@ -172,15 +172,15 @@ struct skobka
 //СОЗДАНИЕ ЭЛЕМЕНТА СПИСКА
 struct skobka* create_skobka(char ch)//Создание элемента списка
 {
-    struct skobka *chr = malloc(sizeof(struct skobka));
+  struct skobka *chr = malloc(sizeof(struct skobka));
 
-    if (chr)
-    {
-        chr->skobka = ch;
-        chr->next = NULL;
-    }
+  if (chr)
+  {
+      chr->skobka = ch;
+      chr->next = NULL;
+  }
         
-    return chr;
+  return chr;
 }
 struct skobka* add_front(struct skobka *head,
                                    struct skobka *skobk)
@@ -231,11 +231,12 @@ void print_ch(struct skobka *skobk, void *arg)
 }
 
 //ПРОВЕРКА НА КОРРЕКТНОСТЬ РАССТАВЛЕННЫХ СКОБОК В СПИСКЕ
-void proverca_list(int i, struct skobka *head, char *str,int *count, int *bracket_count)
+struct skobka *proverca_list(int i, struct skobka *head, char *str,int *count, int *bracket_count, int *count1,int n)
 {
   struct skobka *tmp;
+  int count2  = n;
 
-  while(str[i] != '\0')
+  while(str[i] != '\0' && count2 > 0)
   {
     if (str[i] == '(' || str[i] == '[' || str[i] == '{')
       break;
@@ -243,37 +244,51 @@ void proverca_list(int i, struct skobka *head, char *str,int *count, int *bracke
     if(str[i] == ')' || str[i] == ']' || str[i] == '}')
     {
       *bracket_count = *bracket_count + 1;
-      if(str[i] == ')' && (head->skobka + 1) == str[i])
+      if(head != NULL)
       {
-        *count = *count + 1;
-        tmp = pop_list(&head);
-        printf("%c",tmp->skobka);
-        //free(tmp);
-      }
-      if(str[i] == ']' && (head->skobka + 2) == str[i])
-      {
-        *count = *count + 1;
-        tmp = pop_list(&head);
-        printf("%c",tmp->skobka);
-        //free(tmp);
-      }
-      if(str[i] == '}' && (head->skobka+2) == str[i])
-      {
-        *count = *count + 1;
-        tmp = pop_list(&head);
-        printf("%c",tmp->skobka);
-        //free(tmp);
+        if(str[i] == ')' && (head->skobka + 1) == str[i])
+        {
+          *count = *count + 1;
+          *count1 = *count1 + 1;
+          count2--;
+          tmp = pop_list(&head);
+          printf("%c",tmp->skobka);
+          //free(tmp);
+        }
+        if(str[i] == ']' && (head->skobka + 2) == str[i])
+        {
+          *count = *count + 1;
+          *count1 = *count1 + 1;
+          count2--;
+          tmp = pop_list(&head);
+          printf("%c",tmp->skobka);
+          //free(tmp);
+        }
+        if(str[i] == '}' && (head->skobka+2) == str[i])
+        {
+          *count = *count + 1;
+          *count1 = *count1 + 1;
+          count2--;
+          tmp = pop_list(&head);
+          printf("%c",tmp->skobka);
+          //free(tmp);
+        }
       }
     }
   i++;
   }
+
+  printf("%d\n", *bracket_count);
+
+  return head;
 }
 
 //ЗАПОЛНЕНИЕ СТЕКА, РЕАЛИЗУЕМОГО СПИСКОМ
-struct skobka* get_char_list(char *str,int *n,int *count, int *bracket_count)
+int get_char_list(char *str,int *n,int *count, int *bracket_count)
 {
   int i = 0;
   int check_open = 0;
+  int count1 = 0;//веду подсчет элементов в стеке
 
   struct skobka *head = NULL;
 
@@ -288,13 +303,18 @@ struct skobka* get_char_list(char *str,int *n,int *count, int *bracket_count)
     if(str[i] == ')' || str[i] == ']' || str[i] == '}')
     {
       if(check_open)
-        proverca_list(i, head, str, count, bracket_count);
+      {
+        //apply(head,print_ch,"<%c>\n");
+        head = proverca_list(i, head, str, count, bracket_count, &count1, *n);
+        i = i + count1 - 1;
+        //printf("%c\n", str[i+1]);
+      }
       if(!check_open)
-        head = NULL;
+       return BRACKET_ERROR;
     }
     i++;
   }
-  return head;
+  return OK;
 }
 
 //======================================================================
@@ -302,7 +322,6 @@ struct skobka* get_char_list(char *str,int *n,int *count, int *bracket_count)
 
 int main(void)
 {
-  struct skobka *head = NULL;
   struct skobka *head2 = NULL;
   struct skobka *delete_list = NULL;
 
@@ -340,20 +359,21 @@ int main(void)
       n = 0;
       count = 0;
       bracket_count = 0;
+      error = 0;
       enter(str);
       printf("Введите выражние: ");
       enter(str);
-      head = get_char_list(str,&n,&count,&bracket_count);
-      if(head)
+      error = get_char_list(str,&n,&count,&bracket_count);
+      if(!error)
       {
         if(n == count && n == bracket_count)
           printf("Скобки расставлены верно\n");
         else
           printf("Скобки расставлены неверно\n");
-         printf("%d\t%d",count,bracket_count);
+        printf("%d\t%d\n", n,bracket_count);
       }
       else
-        printf("ERRRRORRR");
+        printf("Ошибка выполнения операции проверки скобок");
     }
     if(ask == 2)
     {
