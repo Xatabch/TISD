@@ -7,7 +7,6 @@
 //создать свой список или массив свободных областей (адресов освобождаемых элементов) с выводом его на экран.
 
 //Проверить правильность расстановки скобок трех типов (круглых, квадратных и фигурных) в выражении.
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -231,60 +230,57 @@ void print_ch(struct skobka *skobk, void *arg)
 }
 
 //ПРОВЕРКА НА КОРРЕКТНОСТЬ РАССТАВЛЕННЫХ СКОБОК В СПИСКЕ
-struct skobka *proverca_list(int i, struct skobka *head, char *str,int *count, int *bracket_count, int *count1,int n)
+struct skobka *proverca_list(int i, struct skobka *head, char *str,int *count, int *count1,int *n)
 {
   struct skobka *tmp;
-  int count2  = n;
+  //int count2  = n;
 
-  while(str[i] != '\0' && count2 > 0)
+  while(str[i] != '\0' && *n > 0)
   {
     if (str[i] == '(' || str[i] == '[' || str[i] == '{')
       break;
 
     if(str[i] == ')' || str[i] == ']' || str[i] == '}')
     {
-      *bracket_count = *bracket_count + 1;
       if(head != NULL)
       {
         if(str[i] == ')' && (head->skobka + 1) == str[i])
         {
           *count = *count + 1;
           *count1 = *count1 + 1;
-          count2--;
+          *n = *n - 1;
           tmp = pop_list(&head);
-          printf("%c",tmp->skobka);
-          //free(tmp);
+          //printf("|%c|\n",tmp->skobka);
+          free(tmp);
         }
         if(str[i] == ']' && (head->skobka + 2) == str[i])
         {
           *count = *count + 1;
           *count1 = *count1 + 1;
-          count2--;
+          *n = *n - 1;
           tmp = pop_list(&head);
-          printf("%c",tmp->skobka);
-          //free(tmp);
+          //printf("|%c|\n",tmp->skobka);
+          free(tmp);
         }
         if(str[i] == '}' && (head->skobka+2) == str[i])
         {
           *count = *count + 1;
           *count1 = *count1 + 1;
-          count2--;
+          *n = *n - 1;
           tmp = pop_list(&head);
-          printf("%c",tmp->skobka);
-          //free(tmp);
+          //printf("|%c|\n",tmp->skobka);
+          free(tmp);
         }
       }
     }
   i++;
   }
 
-  printf("%d\n", *bracket_count);
-
   return head;
 }
 
 //ЗАПОЛНЕНИЕ СТЕКА, РЕАЛИЗУЕМОГО СПИСКОМ
-int get_char_list(char *str,int *n,int *count, int *bracket_count)
+int get_char_list(char *str,int *n,int *count, int *bracket_count,int *count_open_brackets)
 {
   int i = 0;
   int check_open = 0;
@@ -299,19 +295,25 @@ int get_char_list(char *str,int *n,int *count, int *bracket_count)
       check_open = 1;
       push_list(str[i],&head);
       *n = *n + 1;
+      *count_open_brackets = *count_open_brackets + 1;
     }
     if(str[i] == ')' || str[i] == ']' || str[i] == '}')
     {
       if(check_open)
       {
-        //apply(head,print_ch,"<%c>\n");
-        head = proverca_list(i, head, str, count, bracket_count, &count1, *n);
-        i = i + count1 - 1;
-        //printf("%c\n", str[i+1]);
+        head = proverca_list(i, head, str, count, &count1, n);
       }
       if(!check_open)
        return BRACKET_ERROR;
     }
+    i++;
+  }
+
+  i = 0;
+  while(str[i] != '\0')
+  {
+    if(str[i] == ')' || str[i] == ']' || str[i] == '}')
+      *bracket_count = *bracket_count + 1;
     i++;
   }
   return OK;
@@ -334,6 +336,7 @@ int main(void)
   int count = 0;
   int ask;
   int error;
+  int count_open_brackets;
   int bracket_count;
 
   char ch;
@@ -357,20 +360,20 @@ int main(void)
     if (ask == 1)
     {
       n = 0;
+      count_open_brackets = 0;
       count = 0;
       bracket_count = 0;
       error = 0;
       enter(str);
       printf("Введите выражние: ");
       enter(str);
-      error = get_char_list(str,&n,&count,&bracket_count);
+      error = get_char_list(str,&n,&count,&bracket_count,&count_open_brackets);
       if(!error)
       {
-        if(n == count && n == bracket_count)
-          printf("Скобки расставлены верно\n");
+        if(count_open_brackets == count && count_open_brackets == bracket_count)
+          printf("\n\nСкобки расставлены верно\n\n");
         else
-          printf("Скобки расставлены неверно\n");
-        printf("%d\t%d\n", n,bracket_count);
+          printf("\n\nСкобки расставлены неверно\n\n");
       }
       else
         printf("Ошибка выполнения операции проверки скобок");
@@ -387,9 +390,9 @@ int main(void)
       if(error == OK)
       {
         if(n == count)
-          printf("Скобки расставлены верно\n");
+          printf("\n\nСкобки расставлены верно\n\n");
         else
-          printf("Ошибка в расставлении скобок\n");
+          printf("\n\nОшибка в расставлении скобок\n\n");
       }
       else
         printf("Ошибка в расставлении скобок\n");
