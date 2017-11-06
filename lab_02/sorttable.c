@@ -7,18 +7,15 @@ void puzir_table(struct literature_list *data,int size)
 {
   struct literature_list middle;
 
-  if(size != 0 && size >= 39)
-  {
-    for(int i = 0 ; i < size; i++) 
-    { 
-      for(int j = 0 ; j < size - i - 1 ; j++) 
+  for(int i = 0 ; i < size; i++) 
+  { 
+    for(int j = 0 ; j < size - i - 1 ; j++) 
+    {
+      if(strcmp(data[j].author,data[j+1].author) > 0)
       {
-        if(strcmp(data[j].author,data[j+1].author) > 0)
-        {
-          middle = data[j];
-          data[j] = data[j+1];
-          data[j+1] = middle;
-        }
+        middle = data[j];
+        data[j] = data[j+1];
+        data[j+1] = middle;
       }
     }
   }
@@ -36,7 +33,7 @@ void rascheska_table(struct literature_list *data,int size)
     for (int i = left; i<right; i++)
     {
       if (strcmp(data[i].author,data[i+1].author) > 0)
-      {             // меняем их местами
+      {
         middle = data[i];
         data[i] = data[i+1];
         data[i+1] = middle;

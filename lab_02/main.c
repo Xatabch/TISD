@@ -11,7 +11,6 @@
 #include "sortnottable.h"
 #include "writefile.h"
 #include "readline.h"
-#include "tick.h"
 
 #define NAME_LEN 40
 #define TITLE_LEN 50
@@ -20,14 +19,82 @@
 #define TYPE_LEN 40
 #define KIND 40
 
+unsigned long long tick(void)
+{
+  unsigned long long d;
+  __asm__ __volatile__ ("rdtsc" : "=A" (d) );
+  return d;
+}
+
+void times(FILE *f, int n)
+{
+  int size = 0;
+  struct literature_list data[400];
+  struct literature_list sort1[400];
+  struct literature_list sort2[400];
+  struct literature_list sort3[400];
+  struct literature_list sort4[400];
+  int i = 0;
+  unsigned long long tb, te;
+
+  size = get_records(f,data);
+  fclose(f);
+
+  for (i = 0; i < size; i++)
+  {
+    sort1[i] = data[i];
+    sort2[i] = data[i];
+    sort3[i] = data[i];
+    sort4[i] = data[i];
+  }
+
+  printf("\nСортировка %d строк: \n",n);
+
+  tb = tick();
+  puzir_table(sort1,size);
+  te = tick();
+  printf("Пузырек таблицей: %llu\n", te - tb);
+
+  tb = tick();
+  rascheska_table(sort2,size);
+  te = tick();
+  printf("Шейкер таблицей: %llu\n",te - tb);
+
+  struct dop_array dop[size];
+
+  for (int i = 0; i < size; i++)
+  {
+    dop[i].n = i;
+    strcpy(dop[i].author,sort3[i].author);
+  } 
+
+  tb = tick();
+  puzir_not_table(sort3,dop,size);
+  te = tick();
+  printf("Пузырек без таблицы: %llu\n",te - tb);
+
+  struct dop_array dop1[size];
+
+  for (int i = 0; i < size; i++)
+  {
+    dop1[i].n = i;
+    strcpy(dop1[i].author,sort4[i].author);
+  }
+
+  tb = tick();
+  rascheska_not_table(sort4,size,dop1);
+  te = tick();
+  printf("Шейкер без таблицы: %llu\n", te - tb);
+
+  printf("Память используемая при сортировке без дополнительной таблицы: %lu\n", sizeof(data));
+  printf("Память, используемая при сортировке с использованием дополнительной таблицы: %lu\n", sizeof(data) + sizeof(dop));
+
+}
+
 int main(void)
 {
 	FILE *f;
 	struct literature_list data[100];
-  struct literature_list sort1[100];
-  struct literature_list sort2[100];
-  struct literature_list sort3[100];
-  struct literature_list sort4[100];
   int size = 0;
   int ask = -1;
   int ask_type = -1;
@@ -35,7 +102,6 @@ int main(void)
   char ask_industry[INDUSTRY_LEN+1];
   int find_count = 0;
   char type[TYPE_LEN+1] = "perevodnaya";
-  unsigned long long tb, te;
   char author[NAME_LEN + 1];
   char title [TITLE_LEN + 1];
   char publisher[PUBLISHER_LEN + 1];
@@ -46,7 +112,6 @@ int main(void)
   char kostil[1];
   char kind[KIND + 1];
   int delete = -1;
-  //int n = 0;
 
   f = fopen("in.txt","r");
   if(f == NULL)
@@ -59,13 +124,13 @@ int main(void)
 
   if(size >= 40)
   {
-    printf("\n\nЗдравствуйте! В этой программе вам представлен список литературы");
+    printf("\n\nВ этой программе вам представлен список литературы");
     printf(",\nсодержащий фамилию автора, название книги,издательство, количество"); 
     printf(" страниц,\nвид литературы(1: техническая- отрасль, отечественная/"); 
     printf("переводная, год издания;\n2: художественная- роман, пьеса, стихи).\n\n");
 
     printf("Меню:\n1- вывести таблицу из переводных записей по выбору\n2- добавить запись в"); 
-    printf(" таблицу новую запись\n3- удалить запись из таблицы\n4- отсортировать и вывести"); 
+    printf(" таблицу новую запись\n3- удалить запись из таблицы\n4- отсортировать"); 
     printf(" результаты времени сортировки различными методами\n5- вывести таблицу\n\n");
 
 
@@ -116,6 +181,7 @@ int main(void)
           if(data[i].type1 == 2)
             fprintf(f, "%s|%s|%s|%d|%d|%s|\r\n",data[i].author,data[i].title,data[i].publisher,data[i].pages_number,data[i].type1,data[i].item.artistic.kind);
         }
+        printf("\n");
 
         data[size].number = size + 1;
         read_line(kostil,sizeof(kostil));
@@ -198,154 +264,100 @@ int main(void)
 
         printf("Введите номер строки, которую вы хотите удалить: ");
         scanf("%d",&delete);
-        if((size - 1) >= 40)
-        {
-          if(delete != -1 && delete <= size && delete > 0)
-            write_file(delete);
-          else
-            printf("Данной записи нет в таблице\n");
-        }
+        //if((size - 1) >= 40)
+        //{
+        if(delete != -1 && delete <= size && delete > 0)
+          write_file(delete);
         else
-          printf("Таблица должна состоять из более чем 40 элементов, вы не можете удалить данный элемент\n");
+          printf("Данной записи нет в таблице\n");
+        //}
+        //else
+          //printf("Таблица должна состоять из более чем 40 элементов, вы не можете удалить данный элемент\n");
       }
 
 
 
       if(ask ==  4)
       {
-        struct dop_array dop[size];
-
-        for (int i = 0; i < size; i++)
-        {
-          sort1[i] = data[i];
-          sort2[i] = data[i];
-          sort3[i] = data[i];
-          sort4[i] = data[i];
-        }
-
-        printf("Сортировка 40 строк:\n");
-        tb = tick(); 
-        puzir_table(sort1,size);
-        te = tick();
-        printf("Пузырек таблицей: %llu\n", te - tb);
-
-        tb = tick();
-        rascheska_table(sort2,size);
-        te = tick();
-        printf("Расческа таблицей: %llu\n", te - tb);
-
-        tb = tick();
-        puzir_not_table(sort3,dop,size);
-        te = tick();
-        printf("Пузырек без таблицы: %llu\n", te - tb);
-
-        tb = tick();
-        rascheska_not_table(sort4,size);
-        te = tick();
-        printf("Шейкер: %llu\n", te - tb);
-
-        for(int i = 0; i < size; i++)
-        {
-          if(sort1[i].type1 == 1)
-             printf("%3d|%10s|%24s|%11s|%14d|%3d|%16s|%20s|%d|\n", (i+1),sort1[i].author,sort1[i].title,sort1[i].publisher,sort1[i].pages_number,sort1[i].type1,sort1[i].item.technical.industry,sort1[i].item.technical.type,sort1[i].item.technical.year);
-          if(sort1[i].type1 == 2)
-            printf("%3d|%10s|%24s|%11s|%14d|%3d|%16s|\n",(i+1),sort1[i].author,sort1[i].title,sort1[i].publisher,sort1[i].pages_number,sort1[i].type1,sort1[i].item.artistic.kind);
-        }
-      }
-        /*f = fopen("in2.txt","r");
+        f = fopen("in2.txt","r");
         if(f == NULL)
           printf("Can't open file");
         else
         {
-          size = get_records(f,data);
-          fclose(f);
+          times(f,1);
         }
 
-        for (int i = 0; i < size; i++)
-        {
-          sort1[i] = data[i];
-          sort2[i] = data[i];
-          sort3[i] = data[i];
-          sort4[i] = data[i];
-        }
-
-        printf("\nСортировка 1 строки: \n");
-        tb = tick(); 
-        puzir_table(sort1,size);
-        te = tick();
-        printf("Пузырек таблицей: %llu\n", te - tb);
-
-        tb = tick();
-        rascheska_table(sort2,size);
-        te = tick();
-        printf("Расческа таблицей: %llu\n", te - tb);
-
-        tb = tick();
-        puzir_not_table(sort3,dop,size);
-        te = tick();
-        printf("Пузырек без таблицы: %llu\n", te - tb);
-
-        tb = tick();
-        rascheska_not_table(sort4,size);
-        te = tick();
-        printf("Расческа без таблицы: %llu\n", te - tb);
+        printf("\nТАБЛИЦА СО СТРОКАМИ В СЛУЧАЙНОМ ПОРЯДКЕ:\n");
 
         f = fopen("in3.txt","r");
         if(f == NULL)
           printf("Can't open file");
         else
         {
-          size = get_records(f,data);
-          fclose(f);
+          times(f,10);
         }
 
-        for (int i = 0; i < size; i++)
+        f = fopen("in.txt","r");
+        if(f == NULL)
+          printf("Can't open file");
+        else
         {
-          sort1[i] = data[i];
-          sort2[i] = data[i];
-          sort3[i] = data[i];
-          sort4[i] = data[i];
+          times(f,40);
         }
 
-        printf("\nСортировка 10 строк: \n");
-        tb = tick(); 
-        puzir_table(sort1,size);
-        te = tick();
-        printf("Пузырек таблицей: %llu\n", te - tb);
-
-        tb = tick();
-        rascheska_table(sort2,size);
-        te = tick();
-        printf("Расческа таблицей: %llu\n", te - tb);
-
-        tb = tick();
-        puzir_not_table(sort3,dop,size);
-        te = tick();
-        printf("Пузырек без таблицы: %llu\n", te - tb);
-
-        tb = tick();
-        rascheska_not_table(sort4,size);
-        te = tick();
-        printf("Расческа без таблицы: %llu\n", te - tb);
-
-        printf("\n\nДемонстрация сортировки\n\n");
-        f = fopen("out.txt","w");
-        for(int i = 0; i < size; i++)
+        f = fopen("in4.txt","r");
+        if(f == NULL)
+          printf("Can't open file");
+        else
         {
-          n = dop[i].n;
-          if(data[n].type1 == 1)
-          {
-            fprintf(f, "%s|%s|%s|%d|%d|%s|%s|%d|\r\n",data[n].author,data[n].title,data[n].publisher,data[n].pages_number,data[n].type1,data[n].item.technical.industry,data[n].item.technical.type,data[n].item.technical.year);
-            printf("%3d|%10s|%24s|%11s|%7d|%3d|%16s|%15s|%d|\n", (i+1),data[n].author,data[n].title,data[n].publisher,data[n].pages_number,data[n].type1,data[n].item.technical.industry,data[n].item.technical.type,data[n].item.technical.year);
-          }
-          if(data[n].type1 == 2)
-          {
-            fprintf(f, "%s|%s|%s|%d|%d|%s|\r\n",data[n].author,data[n].title,data[n].publisher,data[n].pages_number,data[n].type1,data[n].item.artistic.kind);
-            printf("%3d|%10s|%24s|%11s|%7d|%3d|%16s|\n",(i+1),data[n].author,data[n].title,data[n].publisher,data[n].pages_number,data[n].type1,data[n].item.artistic.kind);
-          }
+          times(f,400);
         }
-        fclose(f);
-        printf("\n\n");*/
+
+        printf("\nУПОРЯДОЧЕННАЯ ТАБЛИЦА:\n");
+
+        f = fopen("in5.txt","r");
+        if(f == NULL)
+          printf("Can't open file");
+        else
+        {
+          times(f,10);
+        }
+
+        f = fopen("in6.txt","r");
+        if(f == NULL)
+          printf("Can't open file");
+        else
+        {
+          times(f,40);
+        }
+
+        f = fopen("in7.txt","r");
+        if(f == NULL)
+          printf("Can't open file");
+        else
+        {
+          times(f,400);
+        }
+
+        printf("\nТАБЛИЦА УПОРЯДОЧЕННАЯ В ОБРАТНОМ ПОРЯДКЕ\n");
+
+        f = fopen("in8.txt","r");
+        if(f == NULL)
+          printf("Can't open file");
+        else
+        {
+          times(f,10);
+        }
+
+        f = fopen("in9.txt","r");
+        if(f == NULL)
+          printf("Can't open file");
+        else
+        {
+          times(f,40);
+        }
+      }
+
 
       if(ask == 5)
       {

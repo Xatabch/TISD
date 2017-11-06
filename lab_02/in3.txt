@@ -7,4 +7,4 @@ Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
 Draizer|Finansist|ACT|587|2|roman|
 Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
 Lutc|Python|Viliams|320|1|programmirovanie|perevodnaya|2014|
-Tolstoi|Boina i mir|Astrel|10000|2|roman|
+Dostoevski|Prestuplenie i nakazanie|Ecsmo|1000|2|roman|

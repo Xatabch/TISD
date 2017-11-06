@@ -1,0 +1,10 @@
+Tolstoi|Boina i mir|Astrel|10000|2|roman|
+Tolstoi|Boina i mir|Astrel|10000|2|roman|
+Solem|Komputernoe zrenie|Press|312|1|programmirovanie|perevodnaya|2012|
+Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Lutc|Python|Viliams|320|1|programmirovanie|perevodnaya|2014|
+Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|perevodnaya|2006|
+Kaverina|Dva kapitana|ACT|619|2|roman|
+Draizer|Finansist|ACT|587|2|roman|
+Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
+Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|

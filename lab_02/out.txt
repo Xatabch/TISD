@@ -38,4 +38,4 @@ Korblan|Zolotoe sechenie|Deagostini|160|1|matematica|otechestvennaya|2006|
 Bredberri|Vino iz oduvanchicov|Eksmo|320|2|roman|
 Douson|Programmiruem na Python|Piter|416|1|programmirovanie|perevodnaya|2014|
 Draizer|Finansist|ACT|587|2|roman|
-Rasputin|Proshanie s materoi|Ecsmo|640|2|roman|
+Avtor|Proizved|Ecsmo|100|1|matematica|otechestvennayz|2013|

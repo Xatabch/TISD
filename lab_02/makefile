@@ -8,12 +8,10 @@ ifeq ($(mode), release)
     CFLAGS += -DNDEBUG -g0
 endif
 
-main.exe: main.o kindbook.o decidepole.o getnewparam.o getrecords.o sorttable.o sortnottable.o writefile.o readline.o tick.o
-	gcc -o main.exe kindbook.o decidepole.o getnewparam.o getrecords.o sorttable.o sortnottable.o writefile.o readline.o tick.o main.o
-main.o: main.c decidepole.h kindbook.h main.h getnewparam.h getrecords.h sorttable.h sortnottable.h writefile.h readline.h tick.h
+main.exe: main.o kindbook.o decidepole.o getnewparam.o getrecords.o sorttable.o sortnottable.o writefile.o readline.o
+	gcc -o main.exe kindbook.o decidepole.o getnewparam.o getrecords.o sorttable.o sortnottable.o writefile.o readline.o main.o
+main.o: main.c decidepole.h kindbook.h main.h getnewparam.h getrecords.h sorttable.h sortnottable.h writefile.h readline.h
 	gcc -std=c99 -Wall -Werror -c main.c
-tick.o: tick.c tick.h
-	gcc -std=c99 -Wall -Werror -c tick.c
 readline.o: readline.c readline.h
 	gcc -std=c99 -Wall -Werror -c readline.c
 writefile.o: writefile.c writefile.h

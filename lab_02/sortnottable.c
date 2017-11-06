@@ -7,12 +7,6 @@ void puzir_not_table(struct literature_list *data,struct dop_array *dop,int size
 {
   struct dop_array middle;
 
-  for (int i = 0; i < size; i++)
-  {
-    dop[i].n = i;
-    strcpy(dop[i].author,data[i].author);
-  }
-
   for(int i = 0 ; i < size; i++) 
   { 
     for(int j = 0 ; j < size - i - 1 ; j++) 
@@ -27,18 +21,11 @@ void puzir_not_table(struct literature_list *data,struct dop_array *dop,int size
   }
 }
 
-void rascheska_not_table(struct literature_list *data,int size)
+void rascheska_not_table(struct literature_list *data,int size,struct dop_array *dop)
 {
   struct dop_array middle;
-  struct dop_array dop[size];
   int left = 0, right = size - 1;
   int flag = 1;
-
-  for (int i = 0; i < size; i++)
-  {
-    dop[i].n = i;
-    strcpy(dop[i].author,data[i].author);
-  }
 
   while ((left < right) && flag > 0)
   {
@@ -46,7 +33,7 @@ void rascheska_not_table(struct literature_list *data,int size)
     for (int i = left; i<right; i++)
     {
       if (strcmp(dop[i].author,dop[i+1].author) > 0)
-      {             // меняем их местами
+      {
         middle = dop[i];
         dop[i] = dop[i+1];
         dop[i+1] = middle;
