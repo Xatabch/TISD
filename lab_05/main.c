@@ -5,6 +5,60 @@
 #define UNCORRECT_SYMBOL -1;
 #define OK 0;
 
+struct colIndex {
+  int Nk; //номера компонент с которых начинается описание столбца
+
+  struct colIndex *next;
+};
+
+struct cscMatrix {
+  int N;  //размер матрицы (N x N)
+  int NZ; //количество ненулевых элементов
+
+  //Массив значений (размер NZ)
+  double *Value;
+  //Массив номеров строк (Размер NZ)
+  int *Row;
+  //Массив индексов строк (размер N + 1)
+  struct colIndex *colindex;
+};
+
+struct colIndex* add_end(struct colIndex *head, 
+                                   struct colIndex *nk)
+{
+    struct colIndex *cur = head;
+
+    if (!head)
+        return nk;
+
+    for ( ; cur->next; cur = cur->next)
+        ;
+
+    cur->next = nk;
+
+    return head;
+}
+
+void push(struct colIndex **head, int data) {
+  struct colIndex *tmp = malloc(sizeof(struct colIndex));
+  tmp->Nk = data;
+  tmp->next = (*head);
+  (*head) = tmp;
+}
+
+int pop(struct colIndex **head) {
+    struct colIndex* prev = NULL;
+    int val;
+    if (head == NULL) {
+        exit(-1);
+    }
+    prev = (*head);
+    val = prev->Nk;
+    (*head) = (*head)->next;
+    free(prev);
+    return val;
+}
+
 double *get_array_from_keyboard(int n,int m, int *count_non_zero, int *count_elemnts)
 {
   FILE *f;
@@ -46,10 +100,14 @@ double *get_array_from_keyboard(int n,int m, int *count_non_zero, int *count_ele
     if(fscanf(f,"%lf",&num) == 1)
     {
       if(num != 0)
+      {
         *count_non_zero = *count_non_zero + 1;
+      }
       while(fscanf(f,"%lf",&num) == 1)
         if(num != 0)
+        {
           *count_non_zero = *count_non_zero + 1;
+        }
     }
   }
 
@@ -206,9 +264,16 @@ void get_ja(int n, int m,int count_elemnts, int count_non_zero)
       ia[i] = ia[i-1];
   }
 
+  j = 0;
   printf("INDEXES: ");
   for(i = m; i >= 0; i--)
+  {
     printf("%d ", ia[i]);
+    //ia[j] = ia[i];
+   // j++;
+  }
+
+  //return ia;
 
 }
 
@@ -218,9 +283,17 @@ int main(void)
   int m = 0;
   int count_non_zero;
   int count_elemnts;
+  int n1 = 0;
+  int count_non_zero1;
+  int count_elemnts1;
 
   double *A;
   int *IA;
+  //int *JA;
+  double *B;
+  int *IB;
+
+
 
   printf("Введите количество строк: ");
   scanf("%d",&n);
@@ -242,8 +315,36 @@ int main(void)
         for(int i = 0; i < count_non_zero; i++)
           printf("%d ", IA[i]+1);
         printf("\n");
-        get_ja(n, m, count_elemnts, count_non_zero);
+        /*JA = */get_ja(n, m, count_elemnts, count_non_zero);
+        /*if(JA)
+        {
+          for(int i = 0; i < m+1; i++)
+            printf("%d ", JA[i]+1);
+        }*/
       }
+
+      printf("\n");
+
+      printf("Введите количество строк для вектора-столбца: ");
+      scanf("%d", &n1);
+      if(n1 > 0)
+      {
+        B = get_array_from_keyboard(n1, 1, &count_non_zero1, &count_elemnts1);
+        IB = get_ia(1, &count_non_zero1);
+        if(B)
+        {
+          printf("B: ");
+          for(int i = 0; i < count_non_zero1;i++)
+            printf("%f ", B[i]);
+          printf("\n");
+          printf("IB: ");
+          for(int i = 0; i < count_non_zero1; i++)
+            printf("%d ", IB[i]+1);
+          printf("\n");
+          get_ja(n1, 1, count_elemnts1, count_non_zero1);
+        }
+      }
+
     }
     else
       printf("Некорректное количество столбцов\n");
