@@ -287,6 +287,41 @@ struct cscMatrix *get_ja(int n, int m,struct cscMatrix *Matrix)
 
 }
 
+struct cscMatrix *transponier(int n, struct cscMatrix *Matrix)
+{
+  int i = 0;
+  int coli = 0;
+  struct cscMatrix *count = NULL;
+  struct cscMatrix *TMatix = malloc(sizeof(struct cscMatrix));
+
+  count = Matrix;
+  for( ; count->colindex; count->colindex = count->colindex->next)
+    coli++;
+
+  int *colindex = malloc(coli * sizeof(int));
+  int *rowindex = malloc(coli * sizeof(int));
+
+  for( ; Matrix->colindex; Matrix->colindex = Matrix->colindex->next)
+  {
+    colindex[i] = Matrix->colindex->Nk;
+    i++;
+  }
+
+  memset(rowindex, 0, (n+1)*sizeof(int));
+  printf("\n");
+  for(i = 0; i < Matrix->NZ; i++)
+    printf("%d ", rowindex[i]);
+  printf("\n");
+  for(i = 0; i < Matrix->NZ; i++)
+    rowindex[Matrix->Row[i] + 1]++;
+
+  for(i = 0; i < Matrix->NZ; i++)
+    printf("%d ", rowindex[i]);
+  printf("\n");
+
+  return Matrix;
+}
+
 int main(void)
 {
   int n = 0;
@@ -319,8 +354,11 @@ int main(void)
           printf("%d ", matrix->Row[i]+1);
         printf("\n");
         matrix = get_ja(n, m, matrix);
+        printf("JA: ");
         for(  ;matrix->colindex; matrix->colindex = matrix->colindex->next)
-          printf("%d\n", matrix->colindex->Nk);
+          printf("%d ", matrix->colindex->Nk);
+
+        transponier(n,matrix);
       }
 
       printf("\n");
@@ -344,8 +382,9 @@ int main(void)
           printf("%d ", vector_matrix->Row[i]+1);
         printf("\n");
         vector_matrix = get_ja(n1, 1, vector_matrix);
+        printf("JB: ");
         for(  ;vector_matrix->colindex; vector_matrix->colindex = vector_matrix->colindex->next)
-          printf("%d\n", vector_matrix->colindex->Nk);
+          printf("%d ", vector_matrix->colindex->Nk);
         }
       }
     }
