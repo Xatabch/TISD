@@ -19,7 +19,7 @@ struct cscMatrix {
   double *Value;
   //Массив номеров строк (Размер NZ)
   int *Row;
-  //Массив индексов строк (размер N + 1)
+  //Массив индексов столбцов (размер N + 1)
   struct colIndex *colindex;
 };
 
@@ -59,14 +59,15 @@ int pop(struct colIndex **head) {
     return val;
 }
 
-double *get_array_from_keyboard(int n,int m, int *count_non_zero, int *count_elemnts)
+struct cscMatrix *get_array_from_keyboard(int n,int m)
 {
   FILE *f;
   int i = 0;
   int c;
   double num;
-  *count_non_zero = 0;
-  *count_elemnts = 0;
+  struct cscMatrix *Matrix = malloc(sizeof(struct cscMatrix));
+  Matrix->NZ = 0;
+  Matrix->N = 0;
 
   f = fopen("in.txt","w");
 
@@ -101,19 +102,19 @@ double *get_array_from_keyboard(int n,int m, int *count_non_zero, int *count_ele
     {
       if(num != 0)
       {
-        *count_non_zero = *count_non_zero + 1;
+        Matrix->NZ++;
       }
       while(fscanf(f,"%lf",&num) == 1)
         if(num != 0)
         {
-          *count_non_zero = *count_non_zero + 1;
+          Matrix->NZ++;
         }
     }
   }
 
   fclose(f);
 
-  double *matrix = malloc(*count_non_zero * sizeof(double));
+  Matrix->Value = malloc(Matrix->NZ * sizeof(double));
   i = 0;
   f = fopen("in.txt","r");
   if(!f)
@@ -125,19 +126,20 @@ double *get_array_from_keyboard(int n,int m, int *count_non_zero, int *count_ele
   {
     if(fscanf(f,"%lf",&num) == 1)
     {
-      *count_elemnts = *count_elemnts + 1;
+      Matrix->N++;
 
       if(num != 0)
       {
-        matrix[i] = num;
+        Matrix->Value[i] = num;
         i++;
       }
       while(fscanf(f,"%lf",&num) == 1)
       {
-        *count_elemnts = *count_elemnts + 1;
+        Matrix->N++;
+
         if(num != 0)
         {
-          matrix[i] = num;
+          Matrix->Value[i] = num;
           i++;
         }
       }
@@ -145,23 +147,26 @@ double *get_array_from_keyboard(int n,int m, int *count_non_zero, int *count_ele
   }
   fclose(f);
 
-  if(*count_elemnts != n * m)
+  if(Matrix->N != n * m)
   {
     printf("Неверное количество элементов\n");
     return NULL;
   }
 
-  return matrix;
+  return Matrix;
+
+  free(Matrix->Value);
+  free(Matrix);
 }
 
-int *get_ia(int m,int *count_non_zero)
+struct cscMatrix *get_ia(int m,struct cscMatrix *Matrix)
 {
   FILE *f;
   int fill_rows = 0;;
   double num;
   int waddap = 0;
   int i = 0;
-  int *IA = malloc(*count_non_zero * sizeof(int));
+  Matrix->Row = malloc(Matrix->NZ * sizeof(int));
 
   f = fopen("in.txt","r");
   if(!f)
@@ -172,7 +177,7 @@ int *get_ia(int m,int *count_non_zero)
     {
       if(num != 0)
       {
-        IA[i] = waddap;
+        Matrix->Row[i] = waddap;
         i++;
       }
 
@@ -186,7 +191,7 @@ int *get_ia(int m,int *count_non_zero)
       {
         if(num != 0)
         {
-          IA[i] = waddap;
+          Matrix->Row[i] = waddap;
           i++;
         }
 
@@ -201,10 +206,11 @@ int *get_ia(int m,int *count_non_zero)
   }
   fclose(f);
 
-  return IA;
+  return Matrix;
+  free(Matrix->Row);
 }
 
-void get_ja(int n, int m,int count_elemnts, int count_non_zero)
+struct cscMatrix *get_ja(int n, int m,struct cscMatrix *Matrix)
 {
   int i = 0;
   int j = 0;
@@ -212,13 +218,14 @@ void get_ja(int n, int m,int count_elemnts, int count_non_zero)
   FILE *f;
   double num;
 
-  double *matrix = malloc(count_elemnts * sizeof(double));
+  struct colIndex *head = NULL;
+  double *matrix = malloc(Matrix->N * sizeof(double));
 
   f = fopen("in.txt","r");
   if(!f)
   {
     printf("Ошибка файла\n");
-    //return NULL;
+    return NULL;
   }
   else
   {
@@ -240,10 +247,10 @@ void get_ja(int n, int m,int count_elemnts, int count_non_zero)
   for(i = 0; i < m+1; i++)
     ia[i] = 0;
 
-  ia[0] = count_non_zero+1;
+  ia[0] = Matrix->NZ + 1;
 
   j = 1;
-  int c_n_z = count_non_zero;
+  int c_n_z = Matrix->NZ;
   i = (n * m) - 1;
   while(i >= 0)
   {
@@ -261,39 +268,33 @@ void get_ja(int n, int m,int count_elemnts, int count_non_zero)
   for(i = 0; i < m+1; i++)
   {
     if(ia[i] == 0)
+    {
       ia[i] = ia[i-1];
+    }
   }
 
-  j = 0;
-  printf("INDEXES: ");
-  for(i = m; i >= 0; i--)
-  {
-    printf("%d ", ia[i]);
-    //ia[j] = ia[i];
-   // j++;
-  }
+  for(i = 0; i < m + 1; i++)
+    push(&head,ia[i]);
 
-  //return ia;
+  Matrix->colindex = malloc(sizeof(struct colIndex));
+  Matrix->colindex = head;
+
+  return Matrix;
+
+  free(matrix);
+  free(ia);
+  free(head);
 
 }
 
 int main(void)
 {
   int n = 0;
-  int m = 0;
-  int count_non_zero;
-  int count_elemnts;
   int n1 = 0;
-  int count_non_zero1;
-  int count_elemnts1;
+  int m = 0;
 
-  double *A;
-  int *IA;
-  //int *JA;
-  double *B;
-  int *IB;
-
-
+  struct cscMatrix *matrix;
+  struct cscMatrix *vector_matrix;
 
   printf("Введите количество строк: ");
   scanf("%d",&n);
@@ -303,24 +304,23 @@ int main(void)
     scanf("%d",&m);
     if(m > 0)
     {
-      A = get_array_from_keyboard(n, m, &count_non_zero, &count_elemnts);
-      IA = get_ia(m,&count_non_zero);
-      if(A)
+      matrix = get_array_from_keyboard(n, m);
+      if(matrix)
       {
+        matrix = get_ia(m,matrix);
         printf("A: ");
-        for(int i = 0; i < count_non_zero;i++)
-          printf("%f ", A[i]);
+        for(int i = 0; i < matrix->NZ;i++)
+          printf("%f ", matrix->Value[i]);
         printf("\n");
+        printf("N: %d\n",matrix->N);
+        printf("NZ: %d\n",matrix->NZ);
         printf("IA: ");
-        for(int i = 0; i < count_non_zero; i++)
-          printf("%d ", IA[i]+1);
+        for(int i = 0; i < matrix->NZ;i++)
+          printf("%d ", matrix->Row[i]+1);
         printf("\n");
-        /*JA = */get_ja(n, m, count_elemnts, count_non_zero);
-        /*if(JA)
-        {
-          for(int i = 0; i < m+1; i++)
-            printf("%d ", JA[i]+1);
-        }*/
+        matrix = get_ja(n, m, matrix);
+        for(  ;matrix->colindex; matrix->colindex = matrix->colindex->next)
+          printf("%d\n", matrix->colindex->Nk);
       }
 
       printf("\n");
@@ -329,22 +329,25 @@ int main(void)
       scanf("%d", &n1);
       if(n1 > 0)
       {
-        B = get_array_from_keyboard(n1, 1, &count_non_zero1, &count_elemnts1);
-        IB = get_ia(1, &count_non_zero1);
-        if(B)
+        vector_matrix = get_array_from_keyboard(n1, 1);
+        if(vector_matrix)
         {
-          printf("B: ");
-          for(int i = 0; i < count_non_zero1;i++)
-            printf("%f ", B[i]);
-          printf("\n");
-          printf("IB: ");
-          for(int i = 0; i < count_non_zero1; i++)
-            printf("%d ", IB[i]+1);
-          printf("\n");
-          get_ja(n1, 1, count_elemnts1, count_non_zero1);
+        vector_matrix = get_ia(1,vector_matrix);
+        printf("B: ");
+        for(int i = 0; i < vector_matrix->NZ;i++)
+          printf("%f ", vector_matrix->Value[i]);
+        printf("\n");
+        printf("N: %d\n",vector_matrix->N);
+        printf("NZ: %d\n",vector_matrix->NZ);
+        printf("IB: ");
+        for(int i = 0; i < vector_matrix->NZ;i++)
+          printf("%d ", vector_matrix->Row[i]+1);
+        printf("\n");
+        vector_matrix = get_ja(n1, 1, vector_matrix);
+        for(  ;vector_matrix->colindex; vector_matrix->colindex = vector_matrix->colindex->next)
+          printf("%d\n", vector_matrix->colindex->Nk);
         }
       }
-
     }
     else
       printf("Некорректное количество столбцов\n");
