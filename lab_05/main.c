@@ -287,39 +287,62 @@ struct cscMatrix *get_ja(int n, int m,struct cscMatrix *Matrix)
 
 }
 
-struct cscMatrix *transponier(int n, struct cscMatrix *Matrix)
+struct cscMatrix *transponier(int m, struct cscMatrix *Matrix)
 {
+  FILE *f;
   int i = 0;
-  int coli = 0;
-  struct cscMatrix *count = NULL;
-  struct cscMatrix *TMatix = malloc(sizeof(struct cscMatrix));
+  //int j = 0;
+  double num;
+  int str_count = 0;//определяет к какой строке принадлежит транспонированная матрица
 
-  count = Matrix;
-  for( ; count->colindex; count->colindex = count->colindex->next)
-    coli++;
+  struct cscMatrix *TMatrix = malloc(sizeof(struct cscMatrix));
+  TMatrix->N = Matrix->N;
+  TMatrix->NZ = Matrix->NZ;
+  TMatrix->Value = malloc(TMatrix->NZ * sizeof(double));
+  TMatrix->Row = malloc(TMatrix->NZ * sizeof(int));
+  //int *colindex = malloc((m+1) * sizeof(int));
 
-  int *colindex = malloc(coli * sizeof(int));
-  int *rowindex = malloc(coli * sizeof(int));
-
-  for( ; Matrix->colindex; Matrix->colindex = Matrix->colindex->next)
+  f = fopen("in.txt","r");
+  if(!f)
   {
-    colindex[i] = Matrix->colindex->Nk;
-    i++;
+    printf("Ошибка открытия файла\n");
+    return NULL;
+  }
+  else
+  {
+    if(fscanf(f, "%lf", &num) == 1)
+    {
+      str_count++;
+
+      if(num != 0)
+      {
+        TMatrix->Value[i] = num;
+        TMatrix->Row[i] = str_count;
+        i++;
+      }
+
+      if(str_count == m)
+        str_count = 0;
+
+      while(fscanf(f, "%lf", &num) == 1)
+      {
+        str_count++;
+
+        if(num != 0)
+        {
+          TMatrix->Value[i] = num;
+          TMatrix->Row[i] = str_count;
+          i++;
+        }
+
+        if(str_count == m)
+          str_count = 0;
+      }
+    }
   }
 
-  memset(rowindex, 0, (n+1)*sizeof(int));
-  printf("\n");
-  for(i = 0; i < Matrix->NZ; i++)
-    printf("%d ", rowindex[i]);
-  printf("\n");
-  for(i = 0; i < Matrix->NZ; i++)
-    rowindex[Matrix->Row[i] + 1]++;
+  return TMatrix;
 
-  for(i = 0; i < Matrix->NZ; i++)
-    printf("%d ", rowindex[i]);
-  printf("\n");
-
-  return Matrix;
 }
 
 int main(void)
@@ -330,6 +353,7 @@ int main(void)
 
   struct cscMatrix *matrix;
   struct cscMatrix *vector_matrix;
+  struct cscMatrix *TMatrix;
 
   printf("Введите количество строк: ");
   scanf("%d",&n);
@@ -358,7 +382,16 @@ int main(void)
         for(  ;matrix->colindex; matrix->colindex = matrix->colindex->next)
           printf("%d ", matrix->colindex->Nk);
 
-        transponier(n,matrix);
+        TMatrix = transponier(m,matrix);
+        if(TMatrix)
+        {
+          printf("\nTMatrix A: ");
+          for(int i = 0; i < TMatrix->NZ;i++)
+            printf("%f ", TMatrix->Value[i]);
+          printf("\nTMatrix IA: ");
+          for(int i = 0; i < TMatrix->NZ;i++)
+            printf("%d ", TMatrix->Row[i]);
+        }
       }
 
       printf("\n");
