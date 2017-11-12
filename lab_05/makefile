@@ -8,11 +8,19 @@ ifeq ($(mode), release)
     CFLAGS += -DNDEBUG -g0
 endif
 
-main.exe: main.o pushpop.o getkeybarr.o getia.o getja.o transp.o mult1.o
-	gcc -o main.exe pushpop.o getkeybarr.o getia.o getja.o transp.o mult1.o main.o
-main.o: main.c pushpop.h getkeybarr.h getia.h getja.h main.h transp.h mult1.h
+main.exe: main.o pushpop.o getkeybarr.o getia.o getja.o transp.o mult1.o alloc.o getfilearr.o mult2.o tick.o
+	gcc -o main.exe pushpop.o getkeybarr.o getia.o getja.o transp.o mult1.o alloc.o getfilearr.o mult2.o tick.o main.o
+main.o: main.c pushpop.h getkeybarr.h getia.h getja.h main.h transp.h mult1.h alloc.h getfilearr.h mult2.h tick.h
 	gcc -std=c99 -Wall -Werror -c main.c
-mult1.o: mult1.c mult1.h main.h pushpop.h
+tick.o: tick.c tick.h
+	gcc -std=c99 -Wall -Werror -c tick.c
+mult2.o: mult2.c mult2.h
+	gcc -std=c99 -Wall -Werror -c mult2.c
+getfilearr.o: getfilearr.c getfilearr.h
+	gcc -std=c99 -Wall -Werror -c getfilearr.c
+alloc.o: alloc.c alloc.h
+	gcc -std=c99 -Wall -Werror -c alloc.c
+mult1.o: mult1.c mult1.h main.h pushpop.h tick.h
 	gcc -std=c99 -Wall -Werror -c mult1.c
 transp.o: transp.c transp.h main.h pushpop.h
 	gcc -std=c99 -Wall -Werror -c transp.c

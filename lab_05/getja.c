@@ -4,7 +4,7 @@
 #include "main.h"
 #include "pushpop.h"
 
-struct cscMatrix *get_ja(int n, int m,struct cscMatrix *Matrix)
+struct cscMatrix *get_ja(int n, int m,struct cscMatrix *Matrix, char *file)
 {
   int i = 0;
   int j = 0;
@@ -15,7 +15,7 @@ struct cscMatrix *get_ja(int n, int m,struct cscMatrix *Matrix)
   struct colIndex *head = NULL;
   double *matrix = malloc(Matrix->N * sizeof(double));
 
-  f = fopen("in.txt","r");
+  f = fopen(file,"r");
   if(!f)
   {
     printf("Ошибка файла\n");

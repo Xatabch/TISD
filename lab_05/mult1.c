@@ -3,6 +3,7 @@
 
 #include "main.h"
 #include "pushpop.h"
+#include "tick.h"
 
 int *make_ip(int tmp1, int tmp2, int m, int *j)
 {
@@ -39,9 +40,11 @@ struct cscMatrix *multiply(int n, int m, struct cscMatrix *Matrix, struct cscMat
   double *val = calloc(n, sizeof(double));
   double h = 0;
   struct colIndex *head = NULL;
+  unsigned long long tb, te;
 
   Result->NZ = 0;
   Result->N = n;
+
   IP = make_ip(0, vector_matrix->NZ, m, vector_matrix->Row);
   if(!IP)
   {
@@ -49,34 +52,28 @@ struct cscMatrix *multiply(int n, int m, struct cscMatrix *Matrix, struct cscMat
     return NULL;
   }
 
+  tb = tick();
   for(i = 0; i < n; i++)
   {
     tmp2 = pop(&Matrix->colindex);
 
     if(tmp1 != tmp2)
     {
-      //printf("TMP1: %d\tTMP2: %d\n",tmp1,tmp2);
-      //IP = make_ip((tmp1 - 1), (tmp2 - 1), m, Matrix->Row);
-      /*for(int k = 0; k < m; k++)
-        printf("%d ", IP[k]);*/
-      //printf("\n");
       for(j = (tmp1 - 1); j < (tmp2 - 1); j++)
       {
-        //printf("2MULT: %lf\n",Matrix->Value[j]);
-        //printf("TRY: %d ", IP[Matrix->Row[j] - 1]);
-        //printf("1MULT: %lf\n", vector_matrix->Value[IP[Matrix->Row[j] - 1]-1]);
         if(IP[Matrix->Row[j] - 1] > 0)
           h += vector_matrix->Value[IP[Matrix->Row[j] - 1]-1] * Matrix->Value[j];
       }
-      //printf("\n");
       if(h > 0)
         Result->NZ++;
-      //printf("\n%lf\n", h);
     }
     val[i] = h;
     h = 0;
     tmp1 = tmp2;
   }
+  te = tick();
+
+  printf("Время занимаемое скалярным умножением: %llu\n", te-tb);
 
   Result->Row = malloc(Result->NZ * sizeof(int));
   for (i = 0; i < n; i++)

@@ -3,17 +3,19 @@
 
 #include "main.h"
 
-struct cscMatrix *get_array_from_keyboard(int n,int m)
+struct cscMatrix *get_array_from_keyboard(int n, int m, char *file)
 {
   FILE *f;
+
   int i = 0;
   int c;
   double num;
+
   struct cscMatrix *Matrix = malloc(sizeof(struct cscMatrix));
   Matrix->NZ = 0;
   Matrix->N = 0;
 
-  f = fopen("in.txt","w");
+  f = fopen(file,"w");
 
   c = getchar();
 
@@ -34,7 +36,7 @@ struct cscMatrix *get_array_from_keyboard(int n,int m)
 
   fclose(f);
 
-  f = fopen("in.txt","r");
+  f = fopen(file,"r");
   if(!f)
   {
     printf("Ошибка файла\n");
@@ -44,15 +46,19 @@ struct cscMatrix *get_array_from_keyboard(int n,int m)
   {
     if(fscanf(f,"%lf",&num) == 1)
     {
+
       if(num != 0)
       {
         Matrix->NZ++;
       }
+
       while(fscanf(f,"%lf",&num) == 1)
+      {
         if(num != 0)
         {
           Matrix->NZ++;
         }
+      }
     }
   }
 
@@ -60,7 +66,7 @@ struct cscMatrix *get_array_from_keyboard(int n,int m)
 
   Matrix->Value = malloc(Matrix->NZ * sizeof(double));
   i = 0;
-  f = fopen("in.txt","r");
+  f = fopen(file,"r");
   if(!f)
   {
     printf("Ошибка файла\n");

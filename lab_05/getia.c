@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-struct cscMatrix *get_ia(int m,struct cscMatrix *Matrix)
+struct cscMatrix *get_ia(int m,struct cscMatrix *Matrix,char *file)
 {
   FILE *f;
   int fill_rows = 0;;
@@ -12,7 +12,7 @@ struct cscMatrix *get_ia(int m,struct cscMatrix *Matrix)
   int i = 0;
   Matrix->Row = malloc(Matrix->NZ * sizeof(int));
 
-  f = fopen("in.txt","r");
+  f = fopen(file,"r");
   if(!f)
     return NULL;
   else
