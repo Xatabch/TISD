@@ -140,6 +140,7 @@ int main(int argc,const char** argv)
               {
                 double **matrix1 = get_matrix_from_file(f,allocate_matrix,n, m);
                 double **matrix2 = get_matrix_from_file(f2,allocate_matrix,n1, 1);
+                printf("OK\n");
 
                 tb = tick();
                 double **multi = mult(allocate_matrix,matrix1,matrix2,n,m,n1,1);
