@@ -12,7 +12,7 @@ main.exe: main.o pushpop.o getkeybarr.o transp.o mult1.o alloc.o getfilearr.o mu
 	gcc -o main.exe pushpop.o getkeybarr.o transp.o mult1.o alloc.o getfilearr.o mult2.o tick.o transpgust.o main.o
 main.o: main.c pushpop.h getkeybarr.h main.h transp.h mult1.h alloc.h getfilearr.h mult2.h tick.h transpgust.h
 	gcc -std=c99 -Wall -Werror -c main.c
-transpgust.o: transpgust.c transpgust.h pushpop.h
+transpgust.o: transpgust.c transpgust.h pushpop.h main.h
 	gcc -std=c99 -Wall -Werror -c transpgust.c
 tick.o: tick.c tick.h
 	gcc -std=c99 -Wall -Werror -c tick.c

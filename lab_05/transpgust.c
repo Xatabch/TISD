@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "pushpop.h"
+#include "main.h"
 
 struct cscMatrix *transpgust(int m,struct cscMatrix *Matrix, int *LJ)
 {
@@ -26,18 +27,18 @@ struct cscMatrix *transpgust(int m,struct cscMatrix *Matrix, int *LJ)
 
     memset(LJT, 0, (m+1) * sizeof(int));
     for(i = 0; i < Matrix->NZ; i++)
-    	LJT[Matrix->Row[i] + 1]++;
+        LJT[Matrix->Row[i] + 1]++;
 
     for(i = 1; i <= m+1; i++)
     {
-    	tmp = LJT[i];
+        tmp = LJT[i];
         LJT[i] = S;
         S = S + tmp;
     }
 
     for(i = 0; i < m; i++)
     {
-    	j1 = LJ[i] ; j2 = LJ[i+1];
+        j1 = LJ[i] ; j2 = LJ[i+1];
         Col = i;
         for(j = j1; j < j2; j++)
         {
@@ -45,16 +46,16 @@ struct cscMatrix *transpgust(int m,struct cscMatrix *Matrix, int *LJ)
            RIndex = Matrix->Row[j];
            IIndex = LJT[RIndex + 1];
            matrixT->Value[IIndex] = V;
-           matrixT->Row[IIndex] = Col;
+           matrixT->Row[IIndex] = Col + 1;
            LJT[RIndex + 1]++;
         }
     }
 
     for(i = m; i >= 0; i--)
-    	push(&head,(LJT[i] + 1));
+        push(&head,(LJT[i] + 1));
 
-  	matrixT->colindex = malloc(sizeof(struct colIndex));
-  	matrixT->colindex = head;
+    matrixT->colindex = malloc(sizeof(struct colIndex));
+    matrixT->colindex = head;
 
     return matrixT;
 }

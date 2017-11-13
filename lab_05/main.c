@@ -37,9 +37,8 @@ int main(int argc,const char** argv)
   int kind_of_enter;
 
   unsigned long long tb, te;
-  //printf("argv[2]: %s\n",argv[2]);
 
-  if(!argv[1])
+  if(!argv[1] && !argv[2])
   {
     file1 = "in.txt";
     file2 = "in2.txt";
@@ -73,72 +72,7 @@ int main(int argc,const char** argv)
       for(i = 0; i < matrix->NZ; i++)
         matrix->Row[i] -= 1;
 
-        int *LJT = malloc((m+1) * sizeof(int));
-        struct cscMatrix *matrixT = malloc(sizeof(struct cscMatrix));
-        matrixT->Value = malloc(matrix->NZ * sizeof(double));
-        matrixT->Row = malloc(matrix->NZ * sizeof(int));
-        matrixT->NZ = matrix->NZ;
-
-        printf("A: ");
-        for(int i = 0; i < matrix->NZ;i++)
-          printf("%f ", matrix->Value[i]);
-        printf("\n");
-        printf("IAT: ");
-        for(int i = 0; i < matrix->NZ; i++)
-          printf("%d ", matrix->Row[i]);
-        printf("\n");
-        printf("LJT: ");
-        for(i = 0; i < (m+1); i++)
-          printf("%d ", LJ[i]);
-        printf("\n");
-
-        /*memset(LJT, 0, (m+1) * sizeof(int));
-        for(i = 0; i < matrix->NZ; i++)
-          LJT[matrix->Row[i] + 1]++;
-
-        int S = 0;
-        int tmp = 0;
-        for(i = 1; i <= m+1; i++)
-        {
-          tmp = LJT[i];
-          LJT[i] = S;
-          S = S + tmp;
-        }
-
-        int j1 = 0;
-        int j2 = 0;
-        int Col = 0;
-        double V = 0;
-        int RIndex = 0;
-        int IIndex = 0;
-        for(i = 0; i < m; i++)
-        {
-          j1 = LJ[i] ; j2 = LJ[i+1];
-          Col = i;
-          for(j = j1; j < j2; j++)
-          {
-            V = matrix->Value[j];
-            RIndex = matrix->Row[j];
-            IIndex = LJT[RIndex + 1];
-            matrixT->Value[IIndex] = V;
-            matrixT->Row[IIndex] = Col;
-            LJT[RIndex + 1]++;
-          }
-        }*/
-
-        printf("transp: ");
-        for(int i = 0; i < matrixT->NZ;i++)
-          printf("%f ", matrixT->Value[i]);
-        printf("\n");
-        printf("IAT: ");
-        for(int i = 0; i < matrixT->NZ; i++)
-          printf("%d ", matrixT->Row[i]);
-        printf("\n");
-        printf("LJT: ");
-        for(i = 0; i < (m+1); i++)
-          printf("%d ", LJT[i]);
-
-        TMatrix = transponse(m,n,matrix);
+      TMatrix = transpgust(m,matrix, LJ);
       }
       else
         return -1;
