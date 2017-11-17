@@ -51,7 +51,7 @@ struct cscMatrix *transpgust(int m,struct cscMatrix *Matrix, int *LJ)
         }
     }
 
-    for(i = m; i >= 0; i--)
+    for(i = m+1; i >= 0; i--)
         push(&head,(LJT[i] + 1));
 
     matrixT->colindex = malloc(sizeof(struct colIndex));

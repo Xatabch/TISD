@@ -45,6 +45,7 @@ struct cscMatrix *multiply(int n, int m, struct cscMatrix *Matrix, struct cscMat
   Result->NZ = 0;
   Result->N = n;
 
+  tb = tick();
   IP = make_ip(0, vector_matrix->NZ, m, vector_matrix->Row);
   if(!IP)
   {
@@ -52,7 +53,6 @@ struct cscMatrix *multiply(int n, int m, struct cscMatrix *Matrix, struct cscMat
     return NULL;
   }
 
-  tb = tick();
   for(i = 0; i < n; i++)
   {
     tmp2 = pop(&Matrix->colindex);
@@ -95,13 +95,7 @@ struct cscMatrix *multiply(int n, int m, struct cscMatrix *Matrix, struct cscMat
       k++;
     }
   }
-  /*printf("\n");
-  printf("VAL: ");
-  for (i = 0; i < n; i++)
-    printf("%lf ", val[i]);
-  printf("\nROW: ");
-  for(i = 0; i < k; i++)
-    printf("%d ", Result->Row[i]);*/
+
   push(&head,(Result->NZ+1));
   push(&head,Result->Row[0]);
   Result->colindex = malloc(sizeof(struct colIndex));

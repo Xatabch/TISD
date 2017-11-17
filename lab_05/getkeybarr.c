@@ -59,7 +59,7 @@ struct cscMatrix *get_array_from_keyboard(int n, int m,const char *file, int kin
   {
     if(fscanf(f,"%lf",&num) == 1)
     {
-
+      Matrix->N++;
       if(num != 0)
       {
         Matrix->NZ++;
@@ -67,6 +67,7 @@ struct cscMatrix *get_array_from_keyboard(int n, int m,const char *file, int kin
 
       while(fscanf(f,"%lf",&num) == 1)
       {
+        Matrix->N++;
         if(num != 0)
         {
           Matrix->NZ++;
@@ -76,6 +77,8 @@ struct cscMatrix *get_array_from_keyboard(int n, int m,const char *file, int kin
   }
 
   fclose(f);
+  if(Matrix->N != n*m)
+    return NULL;
 
   f = fopen(file,"r");
   matrix = get_matrix_from_file(f,allocate_matrix, n, m);
@@ -86,7 +89,6 @@ struct cscMatrix *get_array_from_keyboard(int n, int m,const char *file, int kin
   int *ia = calloc((m+1),sizeof(int));
 
   k = 0;
-  ia[m] = Matrix->N;
   for(int j = 0; j < m; j++)
   {
     for(int i = 0; i < n; i++)
@@ -110,6 +112,7 @@ struct cscMatrix *get_array_from_keyboard(int n, int m,const char *file, int kin
     check = 0;
     row = 0;
   }
+
 
   ia[m] = Matrix->NZ;
   for(i = 0; i < m+1; i++)
