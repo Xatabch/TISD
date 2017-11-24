@@ -3,7 +3,7 @@
 #define __MAIN_H__
 struct tree_node
 {
-  const char *name;
+  int name;
 
   //меньшие
   struct tree_node *left;

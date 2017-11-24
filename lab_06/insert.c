@@ -11,7 +11,7 @@ struct tree_node* insert(struct tree_node *tree, struct tree_node *node)
     if (tree == NULL)
         return node;
 
-    cmp = strcmp(node->name, tree->name);
+    cmp = (node->name - tree->name);
     if (cmp == 0)
     {
         assert(0);

@@ -16,35 +16,21 @@
 #include "createnode.h"//создание узла дерева
 #include "insert.h"//вставка зла в двоичное дерево
 #include "applypre.h"//пямой обход дерева
+#include "getnum.h"//получение чисел из файла и создание дерева.
 
 int main(void)
 {
+  FILE *f;
   struct tree_node *root = NULL;
-  struct tree_node *node;
 
-  node = create_node("f");
-  root = insert(root, node);
-
-  node = create_node("b");
-  root = insert(root, node);
-
-  node = create_node("k");
-  root = insert(root, node);
-
-  node = create_node("a");
-  root = insert(root, node);
-
-  node = create_node("d");
-  root = insert(root, node);
-
-  node = create_node("g");
-  root = insert(root, node);
-
-  node = create_node("l");
-  root = insert(root, node);
-
-  apply_pre(root, print, "%s ");
-  printf("\n");
+  f = fopen("in.txt","r");
+  if(!f)
+    printf("Can't open file\n");
+  else
+  {
+    root = get_num(f);
+    apply_pre(root, print, "%d ");
+  }
 
   return 0;
 }
