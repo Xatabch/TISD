@@ -8,17 +8,14 @@
 struct tree_node* get_num(FILE *f)
 {
   struct tree_node *root = NULL;
-  struct tree_node *node;
   int num;
 
   if(fscanf(f,"%d",&num) == 1)
   {
-    node = create_node(num);
-    root = insert(root, node);
+    insert(&root, num);
     while(fscanf(f, "%d",&num) == 1)
     {
-      node = create_node(num);
-      root = insert(root, node);
+      insert(&root, num);
     }
   }
 

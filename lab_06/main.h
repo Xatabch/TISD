@@ -9,5 +9,7 @@ struct tree_node
   struct tree_node *left;
   //большие
   struct tree_node *right;
+  //родитель
+  struct tree_node *parent;
 };
 #endif

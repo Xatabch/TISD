@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-struct tree_node* create_node(const int num)
+struct tree_node* create_node(const int num, struct tree_node *parent)
 {
     struct tree_node *node;
 
@@ -15,6 +15,7 @@ struct tree_node* create_node(const int num)
 
         node->left = NULL;
         node->right = NULL;
+        node->parent = parent;
     }
 
     return node;
