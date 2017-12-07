@@ -26,7 +26,7 @@ tick.o: tick.c tick.h
 	gcc -std=c99 -Wall -Werror -c tick.c
 createdot.o: createdot.c createdot.h apply.h main.h
 	gcc -std=c99 -Wall -Werror -c createdot.c
-getnum.o: getnum.c getnum.h createnode.h insert.h main.h helpfunc.h
+getnum.o: getnum.c getnum.h createnode.h insert.h main.h helpfunc.h balance.h
 	gcc -std=c99 -Wall -Werror -c getnum.c
 apply.o: apply.c apply.h main.h helpfunc.h
 	gcc -std=c99 -Wall -Werror -c apply.c

@@ -8,20 +8,20 @@
 tree *balance(tree *p)
 {
   fixheight(p);
-  if(bfactor(p) == 2)
+  if(bfactor(p) >= 2)
   {
-    printf("OK\n");
+    printf("left\n");
     if(bfactor(p->right) < 0)
       p->right = rotateright(p->right);
 
     return rotateleft(p);
   }
-   if(bfactor(p) == -2)
+   if(bfactor(p) <= -2)
    {
-    printf("\nOK\n");
+    printf("right\n");
      if(bfactor(p->left) > 0)
-       p->left = rotateleft(p->left);
-     
+        p->left = rotateleft(p->left);
+
      return rotateright(p);
 
    }

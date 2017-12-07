@@ -32,21 +32,28 @@
 #include "balance.h"//балансировка дерева
 #include "insertavl.h"
 
-void apply_balance(tree *tree)
+tree *apply_balance(tree *tree)
 {
   if (tree == NULL)
-         return;
-
+        return NULL;
   apply_balance(tree->left);
-  apply_balance(tree->right);
-  printf("[%d]\n", tree->name);
-  balance(tree);
-}
+  printf("N: [%d %d]\n",tree->name,tree->height );
+  if((tree->right) != NULL)
+    printf("R: [%d %d]\n",(tree->right)->name,(tree->right)->height);
+  if((tree->left) != NULL)
+    printf("L: [%d %d]\n",(tree->left)->name,(tree->left)->height);
+  tree = balance(tree); 
+  apply_balance(tree->right); 
+
+  return tree;
+ }
+
 
 int main(void)
 {
   FILE *f;
   struct tree_node *root = NULL;
+  //struct tree_node *avl_root = NULL;
 
   f = fopen("in.txt","r");
   if(!f)
@@ -58,11 +65,25 @@ int main(void)
 
     printf("\nПрямой обход: ");
     apply_pre(root, print, "%d ");
+    printf("\n");
 
-    apply_balance(root);
-    printf("\nПрямой обход: ");
+    // f = fopen("in.txt","r");
+    // if(!f)
+    //   printf("Can't open file\n");
+    // else
+    // {
+    //   avl_root = get_avl_tree(f);
+    //   fclose(f);
+    //   printf("\nПрямой обход(1): ");
+    //   apply_pre(avl_root, print, "%d ");
+    //   printf("\n");
+
+    // }
+
+    root = apply_balance(root);
+    printf("\nПрямой обход(2): ");
     apply_pre(root, print, "%d ");
-
+    printf("\n");
 
 
   }
