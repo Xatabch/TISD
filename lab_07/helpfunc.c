@@ -40,6 +40,5 @@ void fixheight(tree *p)
 
 int bfactor(tree *p)
 {
-  printf("%d\n",height(p->right) - height(p->left) );
   return (height(p->right) - height(p->left));
 }

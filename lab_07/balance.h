@@ -1,5 +1,5 @@
 //balance
 #ifndef __BALANCE_H__
 #define __BALANCE_H__
-tree *balance(tree *p);
+tree *balance(tree *p,int *check);
 #endif

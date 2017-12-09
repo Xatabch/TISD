@@ -8,10 +8,16 @@ ifeq ($(mode), release)
     CFLAGS += -DNDEBUG -g0
 endif
 
-main.exe: main.o createnode.o insert.o apply.o getnum.o createdot.o tick.o rotateright.o helpfunc.o rotateleft.o balance.o insertavl.o
-	gcc -o main.exe createnode.o insert.o apply.o getnum.o createdot.o tick.o rotateright.o helpfunc.o rotateleft.o balance.o insertavl.o main.o
-main.o: main.c main.h createnode.h insert.h apply.h getnum.h createdot.h tick.h rotateright.h helpfunc.h rotateleft.h balance.h insertavl.h
+main.exe: main.o createnode.o insert.o apply.o getnum.o createdot.o tick.o rotateright.o helpfunc.o rotateleft.o balance.o insertavl.o balancetree.o openhash.o closehash.o
+	gcc -o main.exe createnode.o insert.o apply.o getnum.o createdot.o tick.o rotateright.o helpfunc.o rotateleft.o balance.o insertavl.o balancetree.o openhash.o closehash.o main.o
+main.o: main.c main.h createnode.h insert.h apply.h getnum.h createdot.h tick.h rotateright.h helpfunc.h rotateleft.h balance.h insertavl.h balancetree.h openhash.h closehash.h
 	gcc -std=c99 -Wall -Werror -c main.c
+closehash.o: closehash.c closehash.h main.h
+	gcc -std=c99 -Wall -Werror -c closehash.c
+openhash.o: openhash.c openhash.h main.h
+	gcc -std=c99 -Wall -Werror -c openhash.c
+balancetree.o: balancetree.c balancetree.h main.h balance.h
+	gcc -std=c99 -Wall -Werror -c balancetree.c
 insertavl.o: insertavl.c insertavl.h main.h insert.h balance.h
 	gcc -std=c99 -Wall -Werror -c insertavl.c
 balance.o: balance.c balance.h main.h helpfunc.h rotateleft.h rotateright.h
@@ -36,4 +42,4 @@ createnode.o: createnode.c createnode.h main.h
 	gcc -std=c99 -Wall -Werror -c createnode.c
 
 clean:
-	rm *.o *.exe
+	rm *.o *.exe *.gv *.png

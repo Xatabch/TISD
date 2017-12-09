@@ -12,8 +12,9 @@
 Оценить эффективность использования этих структур (по времени и памяти) для поставленной задачи. 
 Оценить эффективность поиска в хеш-таблице при различном количестве коллизий и при различных методах  их разрешения.*/
 
-/*Используя предыдущую программу (задача №6), сбалансировать полученное дерево. Вывести его на экран в виде дерева. 
-Построить хеш-таблицу из чисел файла. Осуществить поиск введенного целого числа в двоичном дереве поиска, в сбалансированном дереве и в хеш-таблице. 
+/*Используя предыдущую программу (задача №6), сбалансировать полученное дерево . Вывести его на экран в виде дерева.---
+Построить хеш-таблицу из чисел файла.---
+Осуществить поиск введенного целого числа в двоичном дереве поиска, в сбалансированном дереве и в хеш-таблице.--- 
 Сравнить время поиска, объем памяти и количество сравнений при использовании различных структур данных.*/
 
 
@@ -26,34 +27,23 @@
 #include "getnum.h"//получение чисел из файла и создание дерева.
 #include "createdot.h"//создание .gv файла
 #include "tick.h"//замер времени.
-#include "rotateright.h"//// правый поворот вокруг p
+#include "rotateright.h"// правый поворот вокруг p
 #include "rotateleft.h"// левый поворот вокруг q
 #include "helpfunc.h"//вспомогательные функции для построения авл деревьев
 #include "balance.h"//балансировка дерева
-#include "insertavl.h"
-
-tree *apply_balance(tree *tree)
-{
-  if (tree == NULL)
-        return NULL;
-  apply_balance(tree->left);
-  printf("N: [%d %d]\n",tree->name,tree->height );
-  if((tree->right) != NULL)
-    printf("R: [%d %d]\n",(tree->right)->name,(tree->right)->height);
-  if((tree->left) != NULL)
-    printf("L: [%d %d]\n",(tree->left)->name,(tree->left)->height);
-  tree = balance(tree); 
-  apply_balance(tree->right); 
-
-  return tree;
- }
-
+#include "insertavl.h"//функция вставки в балансированное дерево(пока что не требуется)
+#include "balancetree.h"//балансировка дерева
+#include "openhash.h"//хеш-таблица с использованием открытой адресации(метод цепочек)
+#include "closehash.h"//хеш-таблица с использованием закрытой адрсации(линейная адресация)
 
 int main(void)
 {
   FILE *f;
-  struct tree_node *root = NULL;
-  //struct tree_node *avl_root = NULL;
+  tree *root = NULL;
+  Hashmap *map = NULL;
+  int *arr = NULL;
+  int size = 0;
+  //tree *avl_root = NULL;
 
   f = fopen("in.txt","r");
   if(!f)
@@ -63,10 +53,11 @@ int main(void)
     root = get_num(f);
     fclose(f);
 
-    printf("\nПрямой обход: ");
+    printf("\nПрямой обход несбалансированного дерева: ");
     apply_pre(root, print, "%d ");
     printf("\n");
 
+    //создание сбалансировнного дерева
     // f = fopen("in.txt","r");
     // if(!f)
     //   printf("Can't open file\n");
@@ -74,20 +65,57 @@ int main(void)
     // {
     //   avl_root = get_avl_tree(f);
     //   fclose(f);
-    //   printf("\nПрямой обход(1): ");
+    //   printf("\nПрямой обход авл дерева: ");
     //   apply_pre(avl_root, print, "%d ");
-    //   printf("\n");
-
+    //   printf("\n\n");
     // }
 
-    root = apply_balance(root);
-    printf("\nПрямой обход(2): ");
-    apply_pre(root, print, "%d ");
-    printf("\n");
+     root = balance_tree(root);
+     printf("\nПрямой обход авл дерева: ");
+     apply_pre(root, print, "%d ");
+     printf("\n");
 
 
+    //Создание хеш-таблицы с использованием открытой адресаци(устранение коллизий методом цепочек)
+    f = fopen("in.txt","r");
+    if(!f)
+      printf("Невозможно открыть файл\n");
+    else
+    {
+      map = get_open_hash(f);
+      fclose(f);
+    }
+
+    if(map)
+    {
+      printf("'Обход' хеш-таблицы с открытой адресацией:\n");
+      mapIterate(map,printEntry, NULL);
+    }
+    //Проверка поиска в хеш-таблице открытой адресации(требуется последующее развитие данной реализации)
+    int v = 0;
+    v = get(map,16);
+    if(v != -100000000)
+      printf("\nЭлемент %d найден\n", v);
   }
 
+  //Создание хеш-таблицы с использованием закрытой адресации
+  f = fopen("in.txt","r");
+  if(!f)
+    printf("Невозможно открыть файл\n");
+  else
+  {
+    arr = get_close_hash(arr,f,&size);
+    fclose(f);
+    printf("\n'Обход' хеш-таблицы с закрытой адресацией:\n");
+    for(int i = 0; i < size; i++)
+       printf("%d:%d\n", i, arr[i]);
+    int v;
+    int sravneniya = 0;
+    v = get_close(arr,4,&size,&sravneniya);
+    if(v != -10000000)
+      printf("\nЭлемент %d найден\n\n", v);
+
+  }
   f = fopen("tree.gv", "w");
   if(!f)
     printf("Can't open file\n");

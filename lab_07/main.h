@@ -15,11 +15,28 @@ struct tree_node
   struct tree_node *parent;
 };
 
-struct avl_node
+typedef int V;
+typedef int K;
+
+typedef struct Entry
 {
-  int name;
-  unsigned char height;
-  struct avl_node *left;
-  struct avl_node *right;
-};
+  V value;
+  K key;
+} Entry;
+
+typedef struct Node//корзина
+{
+  Entry *value;
+  struct Node *next;
+} Node;
+
+typedef struct Hashmap 
+{
+  Node **data;        //массив корзин
+  size_t size;        //количество элементов в карте  
+  size_t arr_size;    //размер массива корзин
+  float loadFactor;   //процентное заполнение карты, при котором
+                        //происходит пересборка карты
+  int sravneniya; //максимальное количество сравнений в хеш-таблице
+} Hashmap;
 #endif

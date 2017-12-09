@@ -57,12 +57,12 @@ tree *get_avl_tree(FILE *f)
   {
     insert(&root, num);
     apply(root);
-    root = balance(root);
+    root = balance(root,0);
     while(fscanf(f, "%d",&num) == 1)
     {
       insert(&root, num);
       apply(root);
-      root = balance(root);
+      root = balance(root,NULL);
     }
   }
 
