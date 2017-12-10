@@ -1,6 +1,6 @@
 //close hash
 #ifndef __CLOSEHASH_H__
 #define __CLOSEHASH_H__
-int *get_close_hash(int *arr,FILE *f,int *size);
-int get_close(int *arr,int num, int *size,int *sravneniya);
+Hasharray *get_close_hash(Hasharray *arr,FILE *f);
+int get_close(Hasharray *array,int num,int *sravneniya);
 #endif

@@ -14,7 +14,7 @@ void mapIterate(Hashmap *map, void(*f)(Entry*, void*), void* data)
 
     for (i = 0; i < size; i++) {
         Node *anchor = map->data[i];
-        printf("%ld: ",i);
+        printf("\t\t\t%ld: ",i);
         while (anchor) 
         {
             f(anchor->value, data);
@@ -29,22 +29,30 @@ void printEntry(Entry *e, void* data)
     printf("%d ", e->value);
 }
 
-V get(Hashmap *map, V value) 
+V get_open(Hashmap *map, V value, int *sravneniya) 
 {
      size_t index = (value % map->arr_size);
      V retVal = -100000000;
-     if (map->data[index] != NULL) {
+     (*sravneniya) = 0;
+     if (map->data[index] != NULL) 
+     {
          if (CMP_EQ(map->data[index]->value->value, value)) 
-             return map->data[index]->value->value;
+         {  
+            (*sravneniya) = (*sravneniya) + 1;
+            return map->data[index]->value->value;
+         }
          else 
          {
             Node *anchor = map->data[index]->next;
+            (*sravneniya) = (*sravneniya) + 1;
             while (anchor) 
             {
-              if (CMP_EQ(anchor->value->value, value)) {
+              (*sravneniya) = (*sravneniya) + 1;
+              if (CMP_EQ(anchor->value->value, value)) 
+              {
                 retVal = anchor->value->value;
                 break;
-            }
+              }
               anchor = anchor->next;
             }
          }
@@ -161,7 +169,6 @@ Hashmap *get_open_hash(FILE *f)
   }
 
   fclose(f);
-
   Hashmap *map = createHashmap(size);
   f = fopen("in.txt","r");
   if(!f)

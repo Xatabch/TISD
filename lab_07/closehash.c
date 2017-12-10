@@ -5,82 +5,77 @@
 
 #define HASH(num,m) (num % m)
 
-void put_close_hash(int *arr,int num,int *size);
-int *check_restruct(int *arr,int *size);
+void put_close_hash(Hasharray **array,int num);
+Hasharray *check_restruct(Hasharray *array);
 
-int *rehash(int *arr,int *size)
+Hasharray *rehash(Hasharray *array)
 { 
-  int oldsize = *size;
-  *size = *size + 2;
-  int *newArr = calloc((*size),sizeof(int*));
+  Hasharray *newArr = malloc(sizeof(Hasharray));
+  int oldsize = array->size;
+  newArr->size = array->size + 2;
+  newArr->arr = calloc(newArr->size,sizeof(int*));
 
   for(int i = 0; i < oldsize; i++)
   {
-    if(arr[i] != 0)
-    {
-      put_close_hash(newArr,arr[i],size);
-    }
+    if(array->arr[i] != 0)
+      put_close_hash(&newArr,array->arr[i]);
   }
 
   return newArr;
 }
 
-void put_close_hash(int *arr,int num,int *size)
+void put_close_hash(Hasharray **array,int num)
 {
   int i = 0;
-  int index = HASH(num,(*size));
-  if(index < (*size))
+  int index = HASH(num,(*array)->size);
+
+  if(index < (*array)->size)
   {
-    if(arr[index] == 0)
-      arr[index] = num;
+    if((*array)->arr[index] == 0)
+      (*array)->arr[index] = num;
     else
     {
       i = index;
-      while(arr[i] != 0)
+      while((*array)->arr[i] != 0)
       {
         i++;
-        if(i == (*size))
+        if(i == (*array)->size)
           i = 0;
         if(i == index)
           break;
       }
       if(i != index)
-        arr[i] = num;
+        (*array)->arr[i] = num;
 
       if(i == index)
-      {
-        printf("Реструктурирую хеш-таблицу\n");
-        arr = rehash(arr,size);
-      }
+        (*array) = rehash((*array));
     }
   }
   else
-  {
-    printf("Реструктурирую хеш-таблицу\n");
-    arr = rehash(arr,size);
-  }
+    (*array) = rehash((*array));
 
 }
 
-int get_close(int *arr,int num, int *size,int *sravneniya)
+int get_close(Hasharray *array,int num,int *sravneniya)
 {
   int find = -10000000;
   int i;
-  int index = HASH(num,(*size));
+  int index = HASH(num,array->size);
   *sravneniya = 0;
-  if(arr[index] == num)
+
+  if(array->arr[index] == num)
   {
     (*sravneniya) = (*sravneniya) + 1;
-    find = arr[index];
+    find = array->arr[index];
   }
   else
   {
     i = index;
-    while(arr[i] != num)
+    while(array->arr[i] != num)
     {
       (*sravneniya) = (*sravneniya) + 1;
       i++;
-      if(i == (*size))
+      if(i == array->size)
         i = 0;
       if(i == index)
         break;
@@ -94,20 +89,22 @@ int get_close(int *arr,int num, int *size,int *sravneniya)
   return find;
 }
 
-int *get_close_hash(int *arr,FILE *f,int *size)
+Hasharray *get_close_hash(Hasharray *array,FILE *f)
 {
   int num;
+  array = malloc(sizeof(Hasharray));
+  array->size = 0;
 
   if(fscanf(f,"%d",&num) == 1)
   {
-    (*size) = (*size) + 1;
+    array->size++;
     while(fscanf(f,"%d",&num) == 1)
-      (*size) = (*size) + 1;
+      array->size++;
   }
   fclose(f);
-  (*size) = ((*size) * 1.2) + 1;
+  array->size = (array->size * 1.2) + 1;
 
-  arr = calloc((*size) , sizeof(int*));
+  array->arr = calloc(array->size , sizeof(int*));
   f = fopen("in.txt","r");
   if(!f)
     printf("Невозможно открыть файл\n");
@@ -115,31 +112,31 @@ int *get_close_hash(int *arr,FILE *f,int *size)
   {
     if(fscanf(f,"%d",&num) == 1)
     {
-      put_close_hash(arr,num,size);
+      put_close_hash(&array,num);
       while(fscanf(f,"%d",&num) == 1)
       {
-        put_close_hash(arr,num,size);
+        put_close_hash(&array,num);
       }
     }
   }
 
-  printf("\nПроверка на необходимость реструктуризации хеш-таблицы с закрытой адресацией...\n");
-  arr = check_restruct(arr,size);
+  array = check_restruct(array);
 
-  return arr;
+  return array;
 }
 
-int *check_restruct(int *arr,int *size)
+Hasharray *check_restruct(Hasharray *array)
 { 
   float sred = 0;
   float count = 0;
   int sravneniya = 0;
-  for(int i = 0;i < (*size); i++)
+
+  for(int i = 0;i < array->size; i++)
   {
-    if(arr[i] != 0)
+    if(array->arr[i] != 0)
     {
       count++;
-      get_close(arr,arr[i],size,&sravneniya);
+      get_close(array,array->arr[i],&sravneniya);
       sred += sravneniya;
     }
   }
@@ -147,12 +144,7 @@ int *check_restruct(int *arr,int *size)
   sred /= count;
 
   if(sred >= 4)
-  {
-    printf("Реструктурирую хеш-таблицу...\n");
-    arr = rehash(arr,size);
-  }
-  else
-    printf("Реструризация не требуется...\n");
-
-  return arr;
+    array = rehash(array);
+  
+  return array;
 }

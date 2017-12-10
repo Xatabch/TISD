@@ -39,4 +39,11 @@ typedef struct Hashmap
                         //происходит пересборка карты
   int sravneniya; //максимальное количество сравнений в хеш-таблице
 } Hashmap;
+
+typedef struct Hasharray
+{
+  int *arr;//Массив для хранения элементов
+
+  size_t size;//количество элементов в массиве
+} Hasharray;
 #endif

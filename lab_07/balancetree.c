@@ -3,8 +3,9 @@
 #include "main.h" //структуры
 #include "balance.h"//балансировка дерева
 
-tree *apply_balance(tree *tree,int *res)
+tree *apply_balance(tree *_tree,int *res)
 {
+  tree *tree = _tree;
   if (tree == NULL)
         return NULL;
   int check = 0;
