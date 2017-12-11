@@ -37,5 +37,5 @@ void print(tree *node, void *param)
 {
     const char *fmt = param;
     
-    printf(fmt, node->name);
+    printf(fmt, node->name,node->height);
 }

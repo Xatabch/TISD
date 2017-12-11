@@ -16,9 +16,9 @@ delete.o: delete.c delete.h main.h balancetree.h
 	gcc -std=c99 -Wall -Werror -c delete.c
 find.o: find.c find.h main.h
 	gcc -std=c99 -Wall -Werror -c find.c
-closehash.o: closehash.c closehash.h main.h
+closehash.o: closehash.c closehash.h main.h tick.h
 	gcc -std=c99 -Wall -Werror -c closehash.c
-openhash.o: openhash.c openhash.h main.h
+openhash.o: openhash.c openhash.h main.h tick.h
 	gcc -std=c99 -Wall -Werror -c openhash.c
 balancetree.o: balancetree.c balancetree.h main.h balance.h
 	gcc -std=c99 -Wall -Werror -c balancetree.c
@@ -36,8 +36,8 @@ tick.o: tick.c tick.h
 	gcc -std=c99 -Wall -Werror -c tick.c
 createdot.o: createdot.c createdot.h apply.h main.h
 	gcc -std=c99 -Wall -Werror -c createdot.c
-getnum.o: getnum.c getnum.h createnode.h insert.h main.h helpfunc.h balance.h
-	gcc -std=c99 -Wall -Werror -c getnum.c
+getnum.o: getnum.c getnum.h createnode.h insert.h main.h helpfunc.h balance.h balancetree.h find.h apply.h find.h tick.h
+	gcc -std=c99 -Wall -Werror -c getnum.c 
 apply.o: apply.c apply.h main.h helpfunc.h
 	gcc -std=c99 -Wall -Werror -c apply.c
 insert.o: insert.c insert.h main.h createnode.h

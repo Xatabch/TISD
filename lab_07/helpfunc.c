@@ -28,7 +28,7 @@ unsigned char height(tree *p)
   if(p)
     return (p->height);
   else
-    return 0;
+    return 1;
 }
 
 void fixheight(tree *p)
@@ -40,5 +40,6 @@ void fixheight(tree *p)
 
 int bfactor(tree *p)
 {
+  //printf("%d %d\n",p->name, height(p->right) - height(p->left));
   return (height(p->right) - height(p->left));
 }

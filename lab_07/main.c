@@ -15,7 +15,7 @@
 /*Используя предыдущую программу (задача №6), сбалансировать полученное дерево . Вывести его на экран в виде дерева.---
 Построить хеш-таблицу из чисел файла.---
 Осуществить поиск введенного целого числа в двоичном дереве поиска, в сбалансированном дереве и в хеш-таблице.--- 
-Сравнить время поиска, объем памяти и количество сравнений при использовании различных структур данных.*/
+Сравнить время поиска, объем памяти и количество сравнений при использовании различных структур данных.----*/
 
 
 #include <stdio.h>
@@ -43,14 +43,19 @@ int main(void)
   FILE *f;
   tree *root = NULL;
   tree *avl_root = NULL;
-  tree *fnd = NULL;
   Hashmap *map = NULL;
   Hasharray *array = NULL;
-  int v;
-  int sravneniya = 0;
-  unsigned long long tb, te;
   int ask = -1;
-  int find_element;
+  int size = 0;
+
+  int not_balance_tree_time = 0;
+  int not_balance_tree_sravneniya = 0;
+
+  int open_hash_time = 0;
+  int open_hash_sravneniya = 0;
+
+  int close_hash_time = 0;
+  int close_hash_sravneniya = 0;
 
   f = fopen("in.txt","r");
   if(!f)
@@ -64,16 +69,16 @@ int main(void)
     printf("\t4 - Построить хеш-таблицу с закрытой адресацией(линейная адресация)\n");
     printf("\t5 - Ввести элемент для поиска и вывести замеры времени сравнения и память в различных структурах\n");
 
-    root = get_num(f);
+    root = get_num(f,&not_balance_tree_time,&not_balance_tree_sravneniya);
     fclose(f);
     f = fopen("in.txt","r");
-    avl_root = get_num(f);
+    avl_root = get_avl_tree(f);//get_num(f);
     fclose(f);
     f = fopen("in.txt","r");
-    map = get_open_hash(f);
+    map = get_open_hash(f,&size,&open_hash_time,&open_hash_sravneniya);
     fclose(f);
     f = fopen("in.txt","r");
-    array = get_close_hash(array,f);
+    array = get_close_hash(array,f,&close_hash_time, &close_hash_sravneniya);
     fclose(f);
 
     while(1)
@@ -86,13 +91,29 @@ int main(void)
         {
           printf("\n\tПрямой обход несбалансированного дерева: ");
           apply_pre(root, print, "%d ");
+          f = fopen("tree_not_balance.gv", "w");
+          if(!f)
+            printf("Can't open file\n");
+          else
+          {
+            export_to_dot(f, "tree_not_balance",root);
+            fclose(f);
+          }
         }
 
         if(ask == 2)
         { 
-          avl_root = balance_tree(avl_root);
+          //avl_root = balance_tree(avl_root);
           printf("\n\tПрямой обход авл дерева: ");
           apply_pre(avl_root, print, "%d ");
+          f = fopen("tree_balance.gv", "w");
+          if(!f)
+            printf("Can't open file\n");
+          else
+          {
+            export_to_dot(f, "tree_balance",avl_root);
+            fclose(f);
+          }
         }
 
         if(ask == 3)
@@ -110,78 +131,45 @@ int main(void)
 
         if(ask == 5)
         {
-          printf("\n Введите элемент для поиска: ");
-          scanf("%d",&find_element);
+          printf("\tНЕСБАЛАНСИРОВАННОЕ ДЕРЕВО\n\n");
+          printf(">>\t|Среднее время поиска: %d|\n", not_balance_tree_time);
+          printf(">>\t|Среднее количество сравнений: %d|\n",not_balance_tree_sravneniya);
+          printf(">>\t|Память: %d|\n", size * 17);
           printf("\n\n");
-          if(find_element)
-          {
-            tb = tick();
-            fnd = lookup(root, find_element,&sravneniya);
-            te = tick();
-            if(fnd)
-            {
-              printf("\t\t\tНЕСБАЛАНСИРОВАННОЕ ДЕРЕВО\n\n");
-              printf(">>\t|Элемент %d найден|\n",fnd->name);
-              printf(">>\t|Время поиска: %llu|\n", te-tb);
-              printf(">>\t|Сравнения: %d|\n",sravneniya);
-              printf("\n\n");
-            }
-            else
-            {
-              printf(" Такого элемента в структурах нет\n");
-              break;
-            }
-            sravneniya = 0;
 
-            tb = tick();
-            fnd = lookup(avl_root, find_element,&sravneniya);
-            te = tick();
-            printf("\t\t\tАВЛ ДЕРЕВО\n\n");
-            printf(">>\t|Время поиска: %llu|\n", te-tb);
-            if(fnd)
-              printf(">>\t|Элемент %d найден для его получения потребовалось %d сравнение(ий) заняло n памяти|\n", fnd->name,sravneniya);
-            sravneniya = 0;
+            // tb = tick();
+            // fnd = lookup(avl_root, find_element,&sravneniya);
+            // te = tick();
+            // if(fnd)
+            // {
+            //   printf("\tАВЛ ДЕРЕВО\n\n");
+            //   printf(">>\t|Элемент %d найден|\n",fnd->name);
+            //   printf(">>\t|Время поиска: %llu|\n", te-tb);
+            //   printf(">>\t|Сравнения: %d|\n",sravneniya);
+            //   printf(">>\t|Память: %d|\n", size * 17);
+            //   printf("\n\n");
+            // }
+            // sravneniya = 0;
 
-            tb = tick();
-            v = get_open(map,find_element,&sravneniya);
-            te =tick();
-            printf("\nВремя поиска элемента в хеш-таблице с открытой адресацией: %llu", te-tb);
-            if(v != -100000000)
-              printf("\nЭлемент %d найден, для его получения потребовалось %d сравнение(ий)\n", v,sravneniya);
-            sravneniya = 0;
+            printf("\tХЕШ ТАБЛИЦА С ОТКРЫТОЙ АДРЕСАЦИЕЙ(МЕТОД ЦЕПОЧЕК)\n\n");
+            printf(">>\t|Время поиска: %d|\n", open_hash_time);
+            printf(">>\t|Сравнения: %d|\n",open_hash_sravneniya);
+            printf(">>\t|Память: %d|\n", size * 28);
+            printf("\n\n");
 
-            tb = tick();
-            v = get_close(array,find_element,&sravneniya);
-            te =tick();
-            printf("\nВремя поиска элемента с закрытой адресацией: %llu", te-tb);
-            if(v != -10000000)
-              printf("\nЭлемент %d найден, для его получения потребовалось %d сравнение(ий)\n\n", v, sravneniya);
-          }
-
-          if(ask == 0)
-            break;
+            printf("\tХЕШ ТАБЛИЦА С ЗАКРЫТОЙ АДРЕСАЦИЕЙ(МЕТОД ЛИНЕЙНОЙ АДРЕСАЦИИ)\n\n");
+            printf(">>\t|Время поиска: %d|\n", close_hash_time);
+            printf(">>\t|Сравнения: %d|\n",close_hash_sravneniya);
+            printf(">>\t|Память: %d|\n", size * 4 + 4);
         }
+
+        if(ask == 0)
+          break;
       }
+      else
+        break;
     }
 
-  }
-
-  f = fopen("tree_not_balance.gv", "w");
-  if(!f)
-    printf("Can't open file\n");
-  else
-  {
-    export_to_dot(f, "tree_not_balance",root);
-    fclose(f);
-  }
-
-  f = fopen("tree_balance.gv", "w");
-  if(!f)
-    printf("Can't open file\n");
-  else
-  {
-    export_to_dot(f, "tree_balance",avl_root);
-    fclose(f);
   }
 
   return 0;

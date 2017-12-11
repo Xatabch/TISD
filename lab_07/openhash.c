@@ -2,11 +2,25 @@
 #include <stdlib.h>
 
 #include "main.h"
+#include "tick.h"//замер времени.
 
 #define CMP_EQ(a, b) (a == b)
 
 Hashmap* rehashUp(Hashmap **_map_, Entry* e);
 
+//Создание хеш-таблицы с открытой адресацией
+Hashmap* createHashmap(int limit)
+{
+  Hashmap* tmp = (Hashmap*)malloc(sizeof(Hashmap));
+  tmp->arr_size = limit;
+  tmp->size = 0;
+  tmp->sravneniya = 0;
+  tmp->data = (Node**) calloc(tmp->arr_size, sizeof(Node*));
+
+  return tmp;
+}
+
+//Обход открытой хеш таблицы
 void mapIterate(Hashmap *map, void(*f)(Entry*, void*), void* data) 
 {
     size_t size, i;
@@ -24,11 +38,13 @@ void mapIterate(Hashmap *map, void(*f)(Entry*, void*), void* data)
     }
 }
 
+//Печать элементов хеш-таблицы
 void printEntry(Entry *e, void* data) 
 {
     printf("%d ", e->value);
 }
 
+//Поиск элемента в открытой хеш-таблице
 V get_open(Hashmap *map, V value, int *sravneniya) 
 {
      size_t index = (value % map->arr_size);
@@ -60,17 +76,7 @@ V get_open(Hashmap *map, V value, int *sravneniya)
      return retVal;
 }
 
-Hashmap* createHashmap(int limit)
-{
-  Hashmap* tmp = (Hashmap*)malloc(sizeof(Hashmap));
-  tmp->arr_size = limit;
-  tmp->size = 0;
-  tmp->sravneniya = 0;
-  tmp->data = (Node**) calloc(tmp->arr_size, sizeof(Node*));
-
-  return tmp;
-}
-
+//Добавление элемента в хеш-тблаицу с открытой адресацией
 void raw_put(Hashmap **_map_,Entry *e)
 {
   Hashmap *map = *_map_;
@@ -118,6 +124,7 @@ void raw_put(Hashmap **_map_,Entry *e)
   (*_map_)->size++;
 }
 
+//Реструктуризация хеш-таблицы с открытой адресацией
 Hashmap* rehashUp(Hashmap **_map_, Entry* e) 
 {
     Hashmap *newMap = createHashmap((size_t)(*_map_)->arr_size + 1);
@@ -149,6 +156,7 @@ Hashmap* rehashUp(Hashmap **_map_, Entry* e)
     return newMap;
 }
 
+//Добавление элемента в хеш-таблицу с открытой адресацией
 void put(Hashmap **_map_, V value)
 {
   Entry *e = (Entry*)malloc(sizeof(Entry));
@@ -156,20 +164,46 @@ void put(Hashmap **_map_, V value)
   raw_put(_map_, e);
 }
 
-Hashmap *get_open_hash(FILE *f)
+void open_hash_time(Hashmap *map, int *time, int *sravn) 
+{
+    size_t size, i;
+    int sravneniya = 0;
+    unsigned long long tb, te;
+    size = map->arr_size;
+    int num = 0;
+
+    for (i = 0; i < size; i++) {
+        Node *anchor = map->data[i];
+        while (anchor) 
+        {
+          num = anchor->value->value;
+          tb = tick();
+          get_open(map, num, &sravneniya);
+          te = tick();
+          (*time) = (*time) + (int)(te-tb);
+          (*sravn) = (*sravn) + sravneniya;
+          sravneniya = 0;
+          anchor = anchor->next;
+        }
+    }
+}
+
+//Создание и заполнения из файла хеш-талицы с открытой адресацией
+Hashmap *get_open_hash(FILE *f,int *size,int *time, int *sravn)
 {
   int num;
-  int size = 0;
+  (*time) = 0;
+  (*sravn) = 0;
 
   if(fscanf(f,"%d",&num) == 1)
   {
-    size++;
+    (*size) = (*size) + 1;
     while(fscanf(f,"%d",&num) == 1)
-      size++;
+      (*size) = (*size) + 1;
   }
 
   fclose(f);
-  Hashmap *map = createHashmap(size);
+  Hashmap *map = createHashmap(*size);
   f = fopen("in.txt","r");
   if(!f)
     printf("Невозможно открыть файл\n");
@@ -184,6 +218,11 @@ Hashmap *get_open_hash(FILE *f)
     if(map->sravneniya >=4)
       map = rehashUp(&map,NULL);
   }
+
+  open_hash_time(map, time, sravn);
+  (*time) = (*time) / (*size);
+  (*sravn) = (*sravn) / (*size);
+
   
   return map;
 }

@@ -2,11 +2,12 @@
 #include <stdlib.h>
 
 #include "main.h"
+#include "tick.h"//замер времени.
 
 #define HASH(num,m) (num % m)
 
 void put_close_hash(Hasharray **array,int num);
-Hasharray *check_restruct(Hasharray *array);
+Hasharray *check_restruct(Hasharray *array,int *sravn,int *time);
 
 Hasharray *rehash(Hasharray *array)
 { 
@@ -89,7 +90,7 @@ int get_close(Hasharray *array,int num,int *sravneniya)
   return find;
 }
 
-Hasharray *get_close_hash(Hasharray *array,FILE *f)
+Hasharray *get_close_hash(Hasharray *array,FILE *f, int *time, int *sravn)
 {
   int num;
   array = malloc(sizeof(Hasharray));
@@ -120,24 +121,35 @@ Hasharray *get_close_hash(Hasharray *array,FILE *f)
     }
   }
 
-  array = check_restruct(array);
+  (*time) = 0;
+  (*sravn) = 0;
+
+  array = check_restruct(array,sravn,time);
+  (*time) = (*time) / array->size;
+  (*sravn) = (*sravn) / array->size;
 
   return array;
 }
 
-Hasharray *check_restruct(Hasharray *array)
+Hasharray *check_restruct(Hasharray *array,int *sravn,int *time)
 { 
   float sred = 0;
   float count = 0;
   int sravneniya = 0;
+  unsigned long long tb, te;
 
   for(int i = 0;i < array->size; i++)
   {
     if(array->arr[i] != 0)
     {
       count++;
+      tb = tick();
       get_close(array,array->arr[i],&sravneniya);
+      te = tick();
+      (*time) = (*time) + (int)(te-tb);
+      (*sravn) = (*sravn) + sravneniya;
       sred += sravneniya;
+      sravneniya = 0;
     }
   }
 

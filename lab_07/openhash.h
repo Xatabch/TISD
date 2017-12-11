@@ -4,5 +4,5 @@
 void mapIterate(Hashmap *map, void(*f)(Entry*, void*), void* data);
 void printEntry(Entry *e, void* data);
 V get_open(Hashmap *map, V value, int *sravneniya);
-Hashmap *get_open_hash(FILE *f);
+Hashmap *get_open_hash(FILE *f,int *size,int *time, int *sravn);
 #endif
