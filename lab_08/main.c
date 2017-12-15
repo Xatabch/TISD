@@ -15,10 +15,29 @@
 #include <stdlib.h>
 
 #include "main.h"
+#include "allocmtr.h"
+#include "getmatr.h"
+#include "checktree.h"
 
 int main(void)
 {
-	printf("OK\n");
+  FILE *f;
+	Graph *graph;
+  int cant = 0;
+
+  f = fopen("in.txt","r");
+  if(!f)
+    printf("Ошибка открытия файла\n");
+  else
+  {
+    graph = get_matrix(f,allocate_matrix);
+    cant = check_graph_for_tree(graph);
+
+    if(!cant)
+      printf("Можно\n");
+    else
+      printf("Нельзя\n");
+  }
 
 	return 0;
 
