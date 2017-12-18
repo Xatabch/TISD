@@ -8,11 +8,13 @@ ifeq ($(mode), release)
     CFLAGS += -DNDEBUG -g0
 endif
 
-main.exe: main.o allocmtr.o getmatr.o checktree.o
-	gcc -o main.exe allocmtr.o getmatr.o checktree.o main.o
-main.o: main.c allocmtr.h getmatr.h main.h checktree.h
+main.exe: main.o allocmtr.o getmatr.o checktree.o createdot.o
+	gcc -o main.exe allocmtr.o getmatr.o checktree.o createdot.o main.o
+main.o: main.c allocmtr.h getmatr.h main.h checktree.h createdot.h
 	gcc -std=c99 -Wall -Werror -c main.c
-checktree.o: checktree.c checktree.h main.h allocmtr.h
+createdot.o: createdot.c createdot.h main.h checktree.h
+	gcc -std=c99 -Wall -Werror -c createdot.c
+checktree.o: checktree.c checktree.h main.h allocmtr.h createdot.h
 	gcc -std=c99 -Wall -Werror -c checktree.c
 getmatr.o: getmatr.c getmatr.h main.h
 	gcc -std=c99 -Wall -Werror -c getmatr.c

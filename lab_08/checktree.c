@@ -3,16 +3,17 @@
 
 #include "main.h"
 #include "allocmtr.h"
+#include "createdot.h"
 
 #define NEOR 1
 #define HAVE_CYCLES 2
 #define NO_CONNECT 3
 #define OK 0
 #define CANNOT_MAKE_TREE 4
+#define MANY_PARENTS 5
 
 int check_or(Graph *graph)
 {
-
   for(int i = 0; i < graph->n; i++)
   {
     for (int j = 0; j < graph->n; j++)
@@ -30,7 +31,6 @@ int check_or(Graph *graph)
 
 int check_cycles(Graph *graph)
 {
-
   for(int i = 0;i < graph->n; i++)
   {
     if(graph->matrix[i][i] == 1)
@@ -66,31 +66,54 @@ int check_connect(Graph *graph)
   return OK;
 }
 
+int check_parent(Graph *graph)
+{
+  int parent_count = 0;
+
+  for(int i = 0; i < graph->n; i++)
+  {
+    for(int j = 0; j < graph->n;j++)
+    {
+      if(graph->matrix[j][i] == 1)
+      {
+        parent_count++;
+      }
+    }
+    if(parent_count > 1)
+      return MANY_PARENTS;
+    parent_count = 0;
+  }
+
+  return OK;
+}
+
 
 int check_graph(Graph *graph)
 {
   int or = check_or(graph);
   int cycles = check_cycles(graph);
   int connect = check_connect(graph);
+  int parent = check_parent(graph);
 
-  return (or + cycles + connect);
+  return (or + cycles + connect + parent);
 }
 
-// void print(Graph *graph)
-// {
-//     for (int i = 0; i < graph->n; i++)
-//     {
-//       for (int j = 0; j < graph->n; j++)
-//       {
-//         printf("%d ", graph->matrix[i][j]);
-//       }
-//       printf("\n");
-//     }
-// }
+ void print(Graph *graph)
+ {
+     for (int i = 0; i < graph->n; i++)
+     {
+       for (int j = 0; j < graph->n; j++)
+       {
+         printf("%d ", graph->matrix[i][j]);
+       }
+       printf("\n");
+     }
+}
 
 
 int check_graph_for_tree(Graph *graph)
 {
+  FILE *f;
   Graph *graph1 = malloc(sizeof(Graph));
   graph1->n = graph->n;
   graph1->matrix = allocate_matrix((graph1->n),(graph1->n));
@@ -108,9 +131,23 @@ int check_graph_for_tree(Graph *graph)
           graph1->matrix[i][j] = graph->matrix[i][j];
       }
     }
+
     indicate = check_graph(graph1);
     if(indicate == 0)
+    {
+      f = fopen("gr2.gv", "w");
+      if(!f)
+      {
+        printf("Ошибка открытия файла\n");
+      }
+      else
+      {
+        export_to_dot(f, "gr2", graph1);
+        fclose(f);
+      }
+
       return OK;
+    }
     indicate = 0;
   }
 

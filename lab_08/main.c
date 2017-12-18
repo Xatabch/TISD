@@ -1,10 +1,6 @@
 /*Цель работы: 
 реализовать алгоритмы обработки графовых структур: 
 
-1.поиск различных путей, 
-2.проверка связности, 
-3.построение остовых деревьев минимальной стоимости.
-
 Обработать графовую структуру в соответствии с указанным вариантом задания. 
 Обосновать выбор необходимого алгоритма и выбор структуры для представления графов. 
 Ввод данных – на усмотрение программиста. Результат выдать в графической форме.*/
@@ -18,12 +14,16 @@
 #include "allocmtr.h"
 #include "getmatr.h"
 #include "checktree.h"
+#include "createdot.h"
+
+#define EMPTY_FILE -1
 
 int main(void)
 {
   FILE *f;
 	Graph *graph;
   int cant = 0;
+  int check = 0;
 
   f = fopen("in.txt","r");
   if(!f)
@@ -31,12 +31,30 @@ int main(void)
   else
   {
     graph = get_matrix(f,allocate_matrix);
+    if(!graph)
+    {
+      printf("Файл пуст, либо содержит недопустимые символы, проверьте файл.\n");
+      exit(EMPTY_FILE);
+    }
     cant = check_graph_for_tree(graph);
+    check = check_or(graph);
 
-    if(!cant)
+    if(!cant && !check)
       printf("Можно\n");
     else
       printf("Нельзя\n");
+
+    f = fopen("gr.gv", "w");
+
+    if(!f)
+    {
+      printf("Ошибка открытия файла\n");
+    }
+    else
+    {
+      export_to_dot(f, "gr", graph);
+      fclose(f);
+    }
   }
 
 	return 0;

@@ -6,6 +6,7 @@
 Graph *get_matrix(FILE *f,int ** (*alloc)(int,int))
 {
   int num;
+  int count_elements = 0;
   int i,j;
 
   Graph *graph = malloc(sizeof(Graph));
@@ -20,16 +21,17 @@ Graph *get_matrix(FILE *f,int ** (*alloc)(int,int))
   if(fscanf(f,"%d",&num) == 1)
   {
     graph->matrix[i][j] = num;
-      j++;
-      if(j == graph->n)
-      {
-        j=0;
-        i++;
-      }
+    count_elements++;
+    j++;
+    if(j == graph->n)
+    {
+      j=0;
+      i++;
     }
     while(fscanf(f,"%d",&num) == 1)
     {
       graph->matrix[i][j] = num;
+      count_elements++;
       j++;
       if(j == graph->n)
       {
@@ -37,6 +39,11 @@ Graph *get_matrix(FILE *f,int ** (*alloc)(int,int))
         i++;
       }
     }
-
-    return graph;
+    if((graph->n*graph->n) == count_elements)
+      return graph;
+    else
+      return NULL;
+  }
+  else
+    return NULL;
 }
